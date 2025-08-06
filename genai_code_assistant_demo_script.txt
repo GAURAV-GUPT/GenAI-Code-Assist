@@ -1,0 +1,39 @@
+Step 1: Ticket Summarization
+As a user, I want to add logging to all functions so that I can trace input and output values for debugging.
+
+Step 2: Codebase Ingestion
+Upload the file: large_codebase.csv
+
+Step 3: Code Search
+function that adds two numbers
+
+Step 4: Modification Plan
+As a user, I want to add logging to all functions so that I can trace input and output values for debugging.
+
+Step 5: Few-Shot Prompt
+addition function
+
+Step 6: Code Generation - Context
+def function_7(arg1, arg2):
+    result = arg1 + arg2
+    return result
+
+Step 6: Code Generation - Change Description
+Add logging for input and output values.
+
+Step 7: Code Validation
+(Paste the code generated in Step 6)
+
+Step 8: Git Commit + Push - Repo Path
+C:/Users/YourName/Projects/genai_demo/
+
+Step 8: Git Commit + Push - File Path
+module_7.py
+
+Step 8: Git Commit + Push - Commit Message
+feat: add input/output logging to function_7
+
+
+C:/Users/AshokBalasubramanian/Desktop/GENAI/genai_code_assistant
+generated_code.py
+feat: apply GenAI-generated update

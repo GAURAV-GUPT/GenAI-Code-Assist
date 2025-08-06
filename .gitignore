@@ -1,0 +1,4 @@
+# Prevent this from ever being committed again
+PUSH_WITH_TOKEN.PS1
+*.ps1
+.env
