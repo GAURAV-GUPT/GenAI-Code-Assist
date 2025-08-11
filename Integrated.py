@@ -240,5 +240,28 @@ elif step == "9. App Log Analyser":
         except Exception as e:
             st.error(f"❌ Error generating summary: {e}")
 
+elif step == "10. Legacy Code Convertor":
+st.subheader("🔄 Convert Legacy Code")
+    st.info("Click the button to run the 'abc.py' script.")
+    if st.button("Run 8.codeconversion.py"):
+        try:
+            # Use subprocess to call the other Python script
+            # The 'python' command might need to be 'python3' on some systems
+            result = subprocess.run(["python", "8.codeconversion.py"], capture_output=True, text=True, check=True)
+            st.success("✅ '8.codeconversion.py' executed successfully!")
+            if result.stdout:
+                st.subheader("Output from 8.codeconversion.py:")
+                st.code(result.stdout)
+            if result.stderr:
+                st.error("Error output from 8.codeconversion.py:")
+                st.code(result.stderr)
+        except subprocess.CalledProcessError as e:
+            st.error(f"❌ Failed to run '8.codeconversion.py'. Error: {e.stderr}")
+        except FileNotFoundError:
+            st.error("❌ Python executable not found. Make sure 'python' is in your PATH.")
+        except Exception as e:
+            st.error(f"❌ An unexpected error occurred: {e}")
+
+
 
 
