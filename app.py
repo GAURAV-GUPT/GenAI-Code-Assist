@@ -36,7 +36,7 @@ if os.path.exists("style.css"):
 uploaded_file = st.file_uploader("📄 Upload CSV File", type="csv")
 
 # Load LLM
-llm = ChatOpenAI(model="gpt-4", temperature=0.3)
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3)
 
 # Process if file is uploaded
 if uploaded_file:
@@ -64,3 +64,4 @@ if uploaded_file:
                 st.markdown(f"**🔍 Suggestion:** {response.content}")
             except Exception as e:
                 st.error(f"❌ Error: {str(e)}")
+
