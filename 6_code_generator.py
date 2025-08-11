@@ -37,7 +37,7 @@ if context and change and st.button("🚀 Generate Updated Code"):
     )
 
     # Initialize LLM chain
-    llm = ChatOpenAI(model="gpt-4")
+    llm = ChatOpenAI(model="gpt-4o-mini")
     chain = LLMChain(llm=llm, prompt=prompt)
 
     # Get updated code
