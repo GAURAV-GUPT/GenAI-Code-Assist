@@ -250,7 +250,7 @@ elif step == "10. Legacy Code Convertor":
         client = OpenAI(api_key=API_KEY)
     else:
         st.error("Please set your OPENAI_API_KEY in a .env file.")
-    client = None
+        client = None
 
 st.set_page_config(page_title="Code Translator", page_icon="📝")
 st.title("Legacy Code Translator ⚙️")
@@ -340,3 +340,4 @@ if st.button("🚀 Translate Code"):
             st.code(translated_code, language="csharp")
     else:
         st.warning("Please enter some source code to translate.")
+
