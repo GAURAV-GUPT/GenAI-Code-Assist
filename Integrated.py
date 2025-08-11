@@ -190,13 +190,17 @@ elif step == "8. Git Commit + Push":
         except Exception as e:
             st.error(f"❌ Unexpected error:\n{e}")
 
-elif step == "9. App Log Analyser":
-    st.subheader("✅ App Log Analyser")
-
-    code = st.text_area("Paste the logs to validate", value=st.session_state.generated_code, height=300)
-    if code:
-        review_prompt = f"Analyze the following log data for the application service 'X'. Identify the most likely root cause of the incident that occurred between [Start Time] and [End Time]. Provide a detailed explanation of the causal chain of events, and suggest at least three specific improvements to prevent a recurrence and improve future troubleshooting efforts:\n\n{code}"
-        review = llm.invoke(review_prompt)
-        st.write(review)
-
+if step == "9. App Log Analyser":
+    st.subheader("📝 Summarize logs")
+    logs = st.text_area("Enter your app logs here...", value=st.session_state.ticket)
+    if ticket:
+        prompt = PromptTemplate.from_template("""Analyze the following log data for the application service 'X'. Identify the most likely root cause of the incident that occurred between [Start Time] and [End Time]. Provide a detailed explanation of the causal chain of events, and suggest at least three specific improvements to prevent a recurrence and improve future troubleshooting efforts:
+{logs}""")
+        try:
+            chain = LLMChain(llm=llm, prompt=prompt)
+            summary = chain.run(ticket=ticket)
+            st.write(summary)
+            st.session_state.ticket = ticket
+        except Exception as e:
+            st.error(f"❌ Error generating summary: {e}")
 
