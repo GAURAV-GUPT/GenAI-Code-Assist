@@ -18,7 +18,7 @@ from git import Repo, GitCommandError
 load_dotenv()
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
-llm = ChatOpenAI(model="gpt-4")
+llm = ChatOpenAI(model="gpt-4o-mini")
 
 st.set_page_config(page_title="GenAI Full Dev Assistant")
 st.title("🧠 GenAI Developer Assistant (End-to-End)")
@@ -189,3 +189,4 @@ elif step == "8. Git Commit + Push":
             st.error(f"❌ Git command error:\n{e}")
         except Exception as e:
             st.error(f"❌ Unexpected error:\n{e}")
+
