@@ -21,7 +21,7 @@ os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 llm = ChatOpenAI(model="gpt-4o-mini")
 
 st.set_page_config(page_title="GenAI Full Dev Assistant")
-st.title("🧠 GenAI Developer Assistant (End-to-End)")
+st.title("🧠 GenAI - BAU Support Assistant")
 
 step = st.sidebar.radio("Go to Step:", [
     "1. Ticket Summarization",
@@ -203,6 +203,7 @@ if step == "9. App Log Analyser":
             st.session_state.ticket = logs
         except Exception as e:
             st.error(f"❌ Error generating summary: {e}")
+
 
 
 
