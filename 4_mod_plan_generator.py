@@ -26,7 +26,7 @@ if ticket:
     )
 
     # LLM setup and execution
-    llm = ChatOpenAI(model="gpt-4")
+    llm = ChatOpenAI(model="gpt-4o-mini")
     chain = LLMChain(llm=llm, prompt=prompt)
     plan = chain.run(ticket=ticket)
 
