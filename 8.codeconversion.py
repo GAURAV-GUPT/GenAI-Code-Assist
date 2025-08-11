@@ -91,7 +91,7 @@ PROCEDURE DIVISION.
 st.subheader("3. Generate Translated Code")
 
 if st.button("🚀 Translate Code"):
-    if not API_KEY:
+    if not os.environ["OPENAI_API_KEY"]:
         st.warning("Please set your OPENAI_API_KEY in a .env file to enable translation.")
     elif source_code:
         st.info(f"🤖 AI is translating your code to {target_language}...")
