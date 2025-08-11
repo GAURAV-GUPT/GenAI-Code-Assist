@@ -8,7 +8,7 @@ load_dotenv()
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
 # Initialize model
-llm = ChatOpenAI(model="gpt-4")
+llm = ChatOpenAI(model="gpt-4o-mini")
 
 # Streamlit app UI
 st.set_page_config(page_title="✅ Code Validator")
