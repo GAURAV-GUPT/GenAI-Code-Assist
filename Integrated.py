@@ -1,6 +1,9 @@
 # Full GenAI Developer Assistant (Steps 1 to 8 Integrated - Final Fixed)
 import os
-os.environ['GIT_PYTHON_GIT_EXECUTABLE'] = r"C:\Program Files\Git\cmd\git.exe"  # adjust path as needed
+
+os.environ[
+    "GIT_PYTHON_GIT_EXECUTABLE"
+] = r"C:\Program Files\Git\cmd\git.exe"  # adjust path as needed
 
 import git
 import streamlit as st
@@ -23,18 +26,21 @@ llm = ChatOpenAI(model="gpt-4o-mini")
 st.set_page_config(page_title="GenAI Full Dev Assistant")
 # st.title("🧠 GenAI - BAU Support Assistant")
 
-step = st.sidebar.radio("Available Agents:", [
-    "1. Ticket Summarization",
-   # "2. Codebase Ingestion",
-   # "3. Code Search",
-   # "4. Modification Plan",
-   # "5. Few-Shot Prompt (Optional)",
-    "6. Code Generation",
-   # "7. Code Validation",
-   # "8. Git Commit + Push",
-     "9. App Log Analyser",
-    "10. Legacy Code Convertor"
-])
+step = st.sidebar.radio(
+    "Available Agents:",
+    [
+        "1. Ticket Summarization",
+        # "2. Codebase Ingestion",
+        # "3. Code Search",
+        # "4. Modification Plan",
+        # "5. Few-Shot Prompt (Optional)",
+        "6. Code Generation",
+        # "7. Code Validation",
+        # "8. Git Commit + Push",
+        "9. App Log Analyser",
+        "10. Legacy Code Convertor",
+    ],
+)
 
 if "vectordb" not in st.session_state:
     st.session_state.vectordb = None
@@ -47,11 +53,15 @@ if "generated_code" not in st.session_state:
 
 if step == "1. Ticket Summarization":
     st.subheader("📝 Summarize a User Story or Ticket")
-    ticket = st.text_area("Enter your ticket or user story", value=st.session_state.ticket)
+    ticket = st.text_area(
+        "Enter your ticket or user story", value=st.session_state.ticket
+    )
     if ticket:
-        prompt = PromptTemplate.from_template("""Summarize this user story and extract intent, task type, and keywords:
+        prompt = PromptTemplate.from_template(
+            """Summarize this user story and extract intent, task type, and keywords:
 
-{ticket}""")
+{ticket}"""
+        )
         try:
             chain = LLMChain(llm=llm, prompt=prompt)
             summary = chain.run(ticket=ticket)
@@ -67,10 +77,15 @@ elif step == "2. Codebase Ingestion":
         try:
             df = pd.read_csv(file)
             st.dataframe(df)
-            docs = [Document(page_content=f"""File: {r['file_name']}
+            docs = [
+                Document(
+                    page_content=f"""File: {r['file_name']}
 Function: {r['function_name']}
 Code: {r['code_snippet']}
-Commit: {r['commit_message']}""") for _, r in df.iterrows()]
+Commit: {r['commit_message']}"""
+                )
+                for _, r in df.iterrows()
+            ]
             embeddings = OpenAIEmbeddings()
             st.session_state.vectordb = FAISS.from_documents(docs, embeddings)
             st.success("✅ Codebase embedded and ready for semantic search!")
@@ -94,11 +109,13 @@ elif step == "4. Modification Plan":
     st.subheader("🛠️ Generate a Modification Plan")
     ticket = st.text_area("Enter your user story", value=st.session_state.ticket)
     if ticket:
-        mod_prompt = PromptTemplate.from_template("""Given this user story:
+        mod_prompt = PromptTemplate.from_template(
+            """Given this user story:
 
 {ticket}
 
-Propose a step-by-step code modification plan including file/function suggestions.""")
+Propose a step-by-step code modification plan including file/function suggestions."""
+        )
         try:
             mod_chain = LLMChain(llm=llm, prompt=mod_prompt)
             mod_plan = mod_chain.run(ticket=ticket)
@@ -122,20 +139,30 @@ elif step == "5. Few-Shot Prompt (Optional)":
 
 elif step == "6. Code Generation":
     st.subheader("💻 Generate Updated Code")
-    context = st.text_area("Current code or function context", value="def login(user): return user.check_password()")
-    change = st.text_input("Describe the required change", value="Add OTP verification before checking password")
+    context = st.text_area(
+        "Current code or function context",
+        value="def login(user): return user.check_password()",
+    )
+    change = st.text_input(
+        "Describe the required change",
+        value="Add OTP verification before checking password",
+    )
     if context and change:
-        prompt = PromptTemplate.from_template("""{shots}
+        prompt = PromptTemplate.from_template(
+            """{shots}
 
 Here is the existing code context:
 {context}
 
 You need to: {change}
 
-Please generate the updated Python code.""")
+Please generate the updated Python code."""
+        )
         chain = LLMChain(llm=llm, prompt=prompt)
         try:
-            result = chain.run(shots=st.session_state.few_shot, context=context, change=change)
+            result = chain.run(
+                shots=st.session_state.few_shot, context=context, change=change
+            )
             st.code(result, language="python")
             st.session_state.generated_code = result
         except Exception as e:
@@ -143,7 +170,9 @@ Please generate the updated Python code.""")
 
 elif step == "7. Code Validation":
     st.subheader("✅ Validate the Generated Code")
-    code = st.text_area("Paste the code to validate", value=st.session_state.generated_code, height=300)
+    code = st.text_area(
+        "Paste the code to validate", value=st.session_state.generated_code, height=300
+    )
     if code:
         review_prompt = f"You are a senior developer. Review this code for syntax, security issues, and suggest improvements:\n\n{code}"
         review = llm.invoke(review_prompt)
@@ -154,7 +183,9 @@ elif step == "8. Git Commit + Push":
 
     repo_path = st.text_input("Local Git repo path", value="./")
     file_path = st.text_input("Relative path to code file", value="generated_code.py")
-    commit_msg = st.text_input("Commit message", value="feat: apply GenAI-generated update")
+    commit_msg = st.text_input(
+        "Commit message", value="feat: apply GenAI-generated update"
+    )
     if st.button("Push to Git"):
         try:
             # Validate local repo path
@@ -164,7 +195,9 @@ elif step == "8. Git Commit + Push":
                 st.stop()
 
             if not os.path.isdir(os.path.join(abs_repo_path, ".git")):
-                st.error(f"❌ This folder is not a Git repository (missing .git): {abs_repo_path}")
+                st.error(
+                    f"❌ This folder is not a Git repository (missing .git): {abs_repo_path}"
+                )
                 st.stop()
 
             # Validate file path
@@ -195,8 +228,10 @@ elif step == "9. App Log Analyser":
     st.subheader("📝 Summarize logs")
     logs = st.text_area("Enter your app logs here...", value=st.session_state.ticket)
     if logs:
-        prompt = PromptTemplate.from_template("""Analyze the following log data for the application service 'X'. Identify the most likely root cause of the incident that occurred between [Start Time] and [End Time]. Provide a detailed explanation of the causal chain of events, and suggest at least three specific improvements to prevent a recurrence and improve future troubleshooting efforts:
-{logs}""")
+        prompt = PromptTemplate.from_template(
+            """Analyze the following log data for the application service 'X'. Identify the most likely root cause of the incident that occurred between [Start Time] and [End Time]. Provide a detailed explanation of the causal chain of events, and suggest at least three specific improvements to prevent a recurrence and improve future troubleshooting efforts:
+{logs}"""
+        )
         try:
             chain = LLMChain(llm=llm, prompt=prompt)
             summary = chain.run(logs=logs)
@@ -207,19 +242,21 @@ elif step == "9. App Log Analyser":
 
 elif step == "10. Legacy Code Convertor":
     # Load environment variables for the API key
-#load_dotenv()
-#API_KEY = os.getenv("OPENAI_API_KEY")
+    # load_dotenv()
+    # API_KEY = os.getenv("OPENAI_API_KEY")
 
-# Configure the OpenAI API client
-if API_KEY:
-    client = OpenAI(api_key=API_KEY)
-else:
-    st.error("Please set your OPENAI_API_KEY in a .env file.")
+    # Configure the OpenAI API client
+    if API_KEY:
+        client = OpenAI(api_key=API_KEY)
+    else:
+        st.error("Please set your OPENAI_API_KEY in a .env file.")
     client = None
 
 st.set_page_config(page_title="Code Translator", page_icon="📝")
 st.title("Legacy Code Translator ⚙️")
-st.markdown("Use this tool to translate your legacy code (e.g., Cobol, Fortran) into modern languages.")
+st.markdown(
+    "Use this tool to translate your legacy code (e.g., Cobol, Fortran) into modern languages."
+)
 
 # --- Function to call the OpenAI API for translation ---
 def translate_code_with_openai(source_code, target_language):
@@ -242,21 +279,25 @@ Original Code:
 Translated Code:
 """
         response = client.chat.completions.create(
-            model="gpt-4o-mini", # You can choose a different model if you prefer
+            model="gpt-4o-mini",  # You can choose a different model if you prefer
             messages=[
-                {"role": "system", "content": "You are a helpful assistant that translates code."},
-                {"role": "user", "content": prompt}
-            ]
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant that translates code.",
+                },
+                {"role": "user", "content": prompt},
+            ],
         )
         return response.choices[0].message.content
     except Exception as e:
         return f"❌ An error occurred during translation: {e}"
 
+
 # --- UI elements for user input ---
 st.subheader("1. Select Target Language")
 target_language = st.selectbox(
     "Choose the language you want to translate the code to:",
-    ("Python", "Java", "C# (.NET)")
+    ("Python", "Java", "C# (.NET)"),
 )
 
 st.subheader("2. Enter Source Code")
@@ -272,38 +313,30 @@ WORKING-STORAGE SECTION.
 PROCEDURE DIVISION.
     DISPLAY GREETING.
     STOP RUN.
-"""
+""",
 )
 
 st.subheader("3. Generate Translated Code")
 
 if st.button("🚀 Translate Code"):
     if not API_KEY:
-        st.warning("Please set your OPENAI_API_KEY in a .env file to enable translation.")
+        st.warning(
+            "Please set your OPENAI_API_KEY in a .env file to enable translation."
+        )
     elif source_code:
         st.info(f"🤖 AI is translating your code to {target_language}...")
-        
+
         # Call the new function to get the translated code from OpenAI
         translated_code = translate_code_with_openai(source_code, target_language)
 
         st.subheader(f"✅ Translated {target_language} Code")
-        
+
         # Display the code with the correct syntax highlighting
         if "Python" in target_language:
             st.code(translated_code, language="python")
         elif "Java" in target_language:
             st.code(translated_code, language="java")
-        else: # C#
+        else:  # C#
             st.code(translated_code, language="csharp")
     else:
         st.warning("Please enter some source code to translate.")
-
-
-
-
-
-
-
-
-
-
