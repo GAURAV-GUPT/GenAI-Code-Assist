@@ -318,8 +318,8 @@ PROCEDURE DIVISION.
 
 st.subheader("3. Generate Translated Code")
 
-if st.button("🚀 Translate Code") and source_code:
-    #if not API_KEY:
+if st.button("🚀 Translate Code"):
+    if source_code:
     #    st.warning(
      #       "Please set your OPENAI_API_KEY in a .env file to enable translation."
      #   )
@@ -340,4 +340,5 @@ if st.button("🚀 Translate Code") and source_code:
             st.code(translated_code, language="csharp")
     else:
         st.warning("Please enter some source code to translate.")
+
 
