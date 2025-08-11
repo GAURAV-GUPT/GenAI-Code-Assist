@@ -207,8 +207,8 @@ elif step == "9. App Log Analyser":
 
 elif step == "10. Legacy Code Convertor":
     # Load environment variables for the API key
-load_dotenv()
-API_KEY = os.getenv("OPENAI_API_KEY")
+#load_dotenv()
+#API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Configure the OpenAI API client
 if API_KEY:
@@ -297,6 +297,7 @@ if st.button("🚀 Translate Code"):
             st.code(translated_code, language="csharp")
     else:
         st.warning("Please enter some source code to translate.")
+
 
 
 
