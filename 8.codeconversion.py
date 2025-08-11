@@ -1,8 +1,32 @@
 # This code creates a Streamlit application for translating code
 # from languages like Cobol or Fortran into modern languages.
-
+# Full GenAI Developer Assistant (Steps 1 to 8 Integrated - Final Fixed)
+import os
+os.environ['GIT_PYTHON_GIT_EXECUTABLE'] = r"C:\Program Files\Git\cmd\git.exe"  # adjust path as needed
+import git
 import streamlit as st
 import time
+from langchain.chat_models import ChatOpenAI
+from langchain.prompts import PromptTemplate
+from langchain.chains import LLMChain, RetrievalQA
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.vectorstores import FAISS
+from langchain.docstore.document import Document
+from dotenv import load_dotenv
+import pandas as pd
+from git import Repo, GitCommandError
+
+# Load .env for OpenAI key
+load_dotenv()
+os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
+
+llm = ChatOpenAI(model="gpt-4o-mini")
+
+st.set_page_config(page_title="GenAI Full Dev Assistant")
+# st.title("🧠 GenAI - BAU Support Assistant")
+
+
+
 
 # --- Mocking the LLM functionality ---
 # In a real application, you would replace this with a call to a
