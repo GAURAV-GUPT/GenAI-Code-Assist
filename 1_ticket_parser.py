@@ -10,7 +10,7 @@ from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 
 
-llm = ChatOpenAI(model="gpt-4")
+llm = ChatOpenAI(model="gpt-4o-mini")
 
 st.title("📝 Ticket Summarizer")
 ticket = st.text_area("Enter a ticket or user story")
