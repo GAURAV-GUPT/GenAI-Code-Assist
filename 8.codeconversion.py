@@ -2,7 +2,7 @@
 # from languages like Cobol or Fortran into modern languages.
 # Full GenAI Developer Assistant (Steps 1 to 8 Integrated - Final Fixed)
 import os
-os.environ['GIT_PYTHON_GIT_EXECUTABLE'] = r"C:\Program Files\Git\cmd\git.exe"  # adjust path as needed
+os.environ['GIT_PYTHON_GIT_EXECUTABLE'] = r"C:\Program Files\Git\cmd\git.exe" # adjust path as needed
 import git
 import streamlit as st
 import time
@@ -15,24 +15,20 @@ from langchain.docstore.document import Document
 from dotenv import load_dotenv
 import pandas as pd
 from git import Repo, GitCommandError
+from openai import OpenAI
 
 # Load environment variables for the API key
-
 load_dotenv()
-os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
-
-llm = ChatOpenAI(model="gpt-4o-mini")
-
-#load_dotenv()
-#API_KEY = os.getenv("OPENAI_API_KEY")
+API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Configure the OpenAI API client
-#if API_KEY:
- #   client = OpenAI(api_key=API_KEY)
-#else:
- #   st.error("Please set your OPENAI_API_KEY in a .env file.")
-client=None
-st.set_page_config(page_title="Code Translator", page_icon="�")
+if API_KEY:
+    client = OpenAI(api_key=API_KEY)
+else:
+    st.error("Please set your OPENAI_API_KEY in a .env file.")
+    client = None
+
+st.set_page_config(page_title="Code Translator", page_icon="📝")
 st.title("Legacy Code Translator ⚙️")
 st.markdown("Use this tool to translate your legacy code (e.g., Cobol, Fortran) into modern languages.")
 
@@ -41,6 +37,8 @@ def translate_code_with_openai(source_code, target_language):
     """
     Calls the OpenAI API to translate source code into a target language.
     """
+    if not client:
+        return "❌ An error occurred during translation: OpenAI client is not initialized. Please check your API key."
     try:
         # Construct the prompt for the OpenAI model
         prompt = f"""
@@ -91,7 +89,7 @@ PROCEDURE DIVISION.
 st.subheader("3. Generate Translated Code")
 
 if st.button("🚀 Translate Code"):
-    if not os.environ["OPENAI_API_KEY"]:
+    if not API_KEY:
         st.warning("Please set your OPENAI_API_KEY in a .env file to enable translation.")
     elif source_code:
         st.info(f"🤖 AI is translating your code to {target_language}...")
@@ -110,32 +108,3 @@ if st.button("🚀 Translate Code"):
             st.code(translated_code, language="csharp")
     else:
         st.warning("Please enter some source code to translate.")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
