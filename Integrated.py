@@ -25,13 +25,13 @@ st.title("🧠 GenAI Developer Assistant (End-to-End)")
 
 step = st.sidebar.radio("Go to Step:", [
     "1. Ticket Summarization",
-    "2. Codebase Ingestion",
-    "3. Code Search",
-    "4. Modification Plan",
-    "5. Few-Shot Prompt (Optional)",
+   # "2. Codebase Ingestion",
+   # "3. Code Search",
+   # "4. Modification Plan",
+   # "5. Few-Shot Prompt (Optional)",
     "6. Code Generation",
-    "7. Code Validation",
-    "8. Git Commit + Push",
+   # "7. Code Validation",
+   # "8. Git Commit + Push",
      "9. App Log Analyser"
 ])
 
@@ -203,6 +203,7 @@ if step == "9. App Log Analyser":
             st.session_state.ticket = logs
         except Exception as e:
             st.error(f"❌ Error generating summary: {e}")
+
 
 
 
