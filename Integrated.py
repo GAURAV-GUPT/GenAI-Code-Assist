@@ -205,7 +205,7 @@ elif step == "9. App Log Analyser":
         except Exception as e:
             st.error(f"❌ Error generating summary: {e}")
 
-elif step == "10. Legacy Code Convertor"
+elif step == "10. Legacy Code Convertor":
     # Load environment variables for the API key
 load_dotenv()
 API_KEY = os.getenv("OPENAI_API_KEY")
@@ -297,6 +297,7 @@ if st.button("🚀 Translate Code"):
             st.code(translated_code, language="csharp")
     else:
         st.warning("Please enter some source code to translate.")
+
 
 
 
