@@ -191,7 +191,7 @@ elif step == "8. Git Commit + Push":
         except Exception as e:
             st.error(f"❌ Unexpected error:\n{e}")
 
-if step == "9. App Log Analyser":
+elif step == "9. App Log Analyser":
     st.subheader("📝 Summarize logs")
     logs = st.text_area("Enter your app logs here...", value=st.session_state.ticket)
     if logs:
@@ -205,7 +205,7 @@ if step == "9. App Log Analyser":
         except Exception as e:
             st.error(f"❌ Error generating summary: {e}")
 
-if step == "10. Legacy Code Convertor"
+elif step == "10. Legacy Code Convertor"
     # Load environment variables for the API key
 load_dotenv()
 API_KEY = os.getenv("OPENAI_API_KEY")
@@ -297,6 +297,7 @@ if st.button("🚀 Translate Code"):
             st.code(translated_code, language="csharp")
     else:
         st.warning("Please enter some source code to translate.")
+
 
 
 
