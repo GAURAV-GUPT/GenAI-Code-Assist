@@ -17,14 +17,20 @@ import pandas as pd
 from git import Repo, GitCommandError
 
 # Load environment variables for the API key
+
 load_dotenv()
-API_KEY = os.getenv("OPENAI_API_KEY")
+os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
+
+llm = ChatOpenAI(model="gpt-4o-mini")
+
+#load_dotenv()
+#API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Configure the OpenAI API client
-if API_KEY:
-    client = OpenAI(api_key=API_KEY)
-else:
-    st.error("Please set your OPENAI_API_KEY in a .env file.")
+#if API_KEY:
+ #   client = OpenAI(api_key=API_KEY)
+#else:
+ #   st.error("Please set your OPENAI_API_KEY in a .env file.")
 
 st.set_page_config(page_title="Code Translator", page_icon="�")
 st.title("Legacy Code Translator ⚙️")
