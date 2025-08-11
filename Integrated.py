@@ -154,16 +154,6 @@ elif step == "8. Git Commit + Push":
     repo_path = st.text_input("Local Git repo path", value="./")
     file_path = st.text_input("Relative path to code file", value="generated_code.py")
     commit_msg = st.text_input("Commit message", value="feat: apply GenAI-generated update")
-
-elif step == "9. App Log Analyser":
-    st.subheader("✅ App Log Analyser")
-
-    code = st.text_area("Paste the logs to validate", value=st.session_state.generated_code, height=300)
-    if code:
-        review_prompt = f"Analyze the following log data for the application service 'X'. Identify the most likely root cause of the incident that occurred between [Start Time] and [End Time]. Provide a detailed explanation of the causal chain of events, and suggest at least three specific improvements to prevent a recurrence and improve future troubleshooting efforts:\n\n{code}"
-        review = llm.invoke(review_prompt)
-        st.write(review)
-    
     if st.button("Push to Git"):
         try:
             # Validate local repo path
@@ -200,5 +190,13 @@ elif step == "9. App Log Analyser":
         except Exception as e:
             st.error(f"❌ Unexpected error:\n{e}")
 
+elif step == "9. App Log Analyser":
+    st.subheader("✅ App Log Analyser")
+
+    code = st.text_area("Paste the logs to validate", value=st.session_state.generated_code, height=300)
+    if code:
+        review_prompt = f"Analyze the following log data for the application service 'X'. Identify the most likely root cause of the incident that occurred between [Start Time] and [End Time]. Provide a detailed explanation of the causal chain of events, and suggest at least three specific improvements to prevent a recurrence and improve future troubleshooting efforts:\n\n{code}"
+        review = llm.invoke(review_prompt)
+        st.write(review)
 
 
