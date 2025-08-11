@@ -32,6 +32,7 @@ step = st.sidebar.radio("Go to Step:", [
     "6. Code Generation",
     "7. Code Validation",
     "8. Git Commit + Push"
+     "9. App Log Analyser"
 ])
 
 if "vectordb" not in st.session_state:
@@ -198,5 +199,6 @@ elif step == "9. App Log Analyser":
             st.error(f"❌ Git command error:\n{e}")
         except Exception as e:
             st.error(f"❌ Unexpected error:\n{e}")
+
 
 
