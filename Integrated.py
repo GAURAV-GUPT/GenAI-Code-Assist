@@ -32,7 +32,8 @@ step = st.sidebar.radio("Available Agents:", [
     "6. Code Generation",
    # "7. Code Validation",
    # "8. Git Commit + Push",
-     "9. App Log Analyser"
+     "9. App Log Analyser",
+    "10. Legacy Code Convertor"
 ])
 
 if "vectordb" not in st.session_state:
@@ -204,6 +205,8 @@ if step == "9. App Log Analyser":
         except Exception as e:
             st.error(f"❌ Error generating summary: {e}")
 
+if step == "10. Legacy Code Convertor"
+    genai-code-assist ∙ main ∙ 8.codeconversion.py
 
 
 
