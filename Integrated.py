@@ -263,8 +263,8 @@ def translate_code_with_openai(source_code, target_language):
     """
     Calls the OpenAI API to translate source code into a target language.
     """
- #   if not client:
-  #      return "❌ An error occurred during translation: OpenAI client is not initialized. Please check your API key."
+    #   if not client:
+    #      return "❌ An error occurred during translation: OpenAI client is not initialized. Please check your API key."
     try:
         # Construct the prompt for the OpenAI model
         prompt = f"""
@@ -316,30 +316,25 @@ PROCEDURE DIVISION.
 """,
 )
 
-    st.subheader("3. Generate Translated Code")
+st.subheader("3. Generate Translated Code")
 
-    if st.button("🚀 Translate Code"):
-        if source_code:
-            st.info(f"🤖 AI is translating your code to {target_language}...")
+if st.button("🚀 Translate Code"):
+    if source_code:
+        st.info(f"🤖 AI is translating your code to {target_language}...")
 
-            # Call the new function and pass the client object
-            translated_code = translate_code_with_openai(source_code, target_language, client)
+        # Call the new function and pass the client object
+        translated_code = translate_code_with_openai(
+            source_code, target_language, client
+        )
 
-            st.subheader(f"✅ Translated {target_language} Code")
+        st.subheader(f"✅ Translated {target_language} Code")
 
-            # Display the code with the correct syntax highlighting
-            if "Python" in target_language:
-                st.code(translated_code, language="python")
-            elif "Java" in target_language:
-                st.code(translated_code, language="java")
-            else:  # C#
-                st.code(translated_code, language="csharp")
-        else:
-            st.warning("Please enter some source code to translate.")
-
-
-
-
-
-
-
+        # Display the code with the correct syntax highlighting
+        if "Python" in target_language:
+            st.code(translated_code, language="python")
+        elif "Java" in target_language:
+            st.code(translated_code, language="java")
+        else:  # C#
+            st.code(translated_code, language="csharp")
+    else:
+        st.warning("Please enter some source code to translate.")
