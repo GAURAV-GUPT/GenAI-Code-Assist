@@ -31,7 +31,7 @@ llm = ChatOpenAI(model="gpt-4o-mini")
  #   client = OpenAI(api_key=API_KEY)
 #else:
  #   st.error("Please set your OPENAI_API_KEY in a .env file.")
-
+client=None
 st.set_page_config(page_title="Code Translator", page_icon="�")
 st.title("Legacy Code Translator ⚙️")
 st.markdown("Use this tool to translate your legacy code (e.g., Cobol, Fortran) into modern languages.")
