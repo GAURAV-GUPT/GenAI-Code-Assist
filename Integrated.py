@@ -77,11 +77,11 @@ step = st.sidebar.radio(
        # "3. Code Search",
        # "4. Modification Plan",
        # "5. Few-Shot Prompt (Optional)",
-       # "6. Code Generation",
+         "6. Code Generation",
        # "7. Code Validation",
        # "8. Git Commit + Push",
         "9. App Log Analyser",
-        "10. Legacy Code Convertor",
+        "10. Legacy Code Convertor"
     ],
 )
 
@@ -331,6 +331,7 @@ PROCEDURE DIVISION.
                     st.code(translated_code, language="java")
                 else:
                     st.code(translated_code, language="csharp")
+
 
 
 
