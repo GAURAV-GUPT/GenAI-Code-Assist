@@ -241,6 +241,7 @@ elif step == "9. App Log Analyser":
             st.error(f"❌ Error generating summary: {e}")
 ######======================================================= Legacy Code Conversion Block ============================================================
 elif step == "10. Legacy Code Convertor":
+    API_KEY = os.getenv("OPENAI_API_KEY")
     st.set_page_config(page_title="Code Translator", page_icon="📝")
     st.title("Legacy Code Translator ⚙️")
     st.markdown("Use this tool to translate your legacy code (e.g., Cobol, Fortran) into modern languages.")
@@ -250,7 +251,7 @@ def translate_code_with_openai(source_code, target_language):
     """
     Calls the OpenAI API to translate source code into a target language.
     """
-    if not os.environ["OPENAI_API_KEY"]:
+    if not API_KEY:
         return "❌ An error occurred during translation: OpenAI client is not initialized. Please check your API key."
     try:
         # Construct the prompt for the OpenAI model
@@ -306,7 +307,7 @@ PROCEDURE DIVISION.
 st.subheader("3. Generate Translated Code")
 
 if st.button("🚀 Translate Code"):
-    if not os.environ["OPENAI_API_KEY"]:
+    if not API_KEY:
         st.warning(
             "Please set your OPENAI_API_KEY in a .env file to enable translation."
         )
@@ -327,6 +328,7 @@ if st.button("🚀 Translate Code"):
             st.code(translated_code, language="csharp")
     else:
         st.warning("Please enter some source code to translate.")
+
 
 
 
