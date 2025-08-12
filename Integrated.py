@@ -23,8 +23,8 @@ os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
 llm = ChatOpenAI(model="gpt-4o-mini")
 
-st.set_page_config(page_title="GenAI Full Dev Assistant")
-# st.title("🧠 GenAI - BAU Support Assistant")
+st.set_page_config(page_title="**AI for IT - Assistant**")
+# st.title("🧠 **AI for IT - Assistant**")
 
 step = st.sidebar.radio(
     "**Available Agents:**",
@@ -241,4 +241,5 @@ elif step == "9. App Log Analyser":
             st.error(f"❌ Error generating summary: {e}")
 
 # elif step == "10. Legacy Code Convertor":
+
 
