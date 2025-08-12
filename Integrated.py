@@ -20,7 +20,6 @@ from git import Repo, GitCommandError
 # Load .env for OpenAI key
 load_dotenv()
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
-
 llm = ChatOpenAI(model="gpt-4o-mini")
 
 st.set_page_config(page_title="**AI for IT - Assistant**")
@@ -180,7 +179,6 @@ elif step == "7. Code Validation":
 
 elif step == "8. Git Commit + Push":
     st.subheader("🚀 Commit and Push Code to Git")
-
     repo_path = st.text_input("Local Git repo path", value="./")
     file_path = st.text_input("Relative path to code file", value="generated_code.py")
     commit_msg = st.text_input(
@@ -241,6 +239,13 @@ elif step == "9. App Log Analyser":
             st.error(f"❌ Error generating summary: {e}")
 ######======================================================= Legacy Code Conversion Block ============================================================
 elif step == "10. Legacy Code Convertor":
+    API_KEY = os.getenv("OPENAI_API_KEY")
+    # Configure the OpenAI API client
+    if API_KEY:
+        client = OpenAI(api_key=API_KEY)
+    else:
+    st.error("Please set your OPENAI_API_KEY in a .env file.")
+    client = None
     API_KEY = os.getenv("OPENAI_API_KEY")
     st.set_page_config(page_title="Code Translator", page_icon="📝")
     st.title("Legacy Code Translator ⚙️")
@@ -328,6 +333,7 @@ if st.button("🚀 Translate Code"):
             st.code(translated_code, language="csharp")
     else:
         st.warning("Please enter some source code to translate.")
+
 
 
 
