@@ -269,7 +269,7 @@ elif step == "8. Git Commit + Push":
 
 elif step == "9. App Log Analyser":
     st.subheader("📝 Summarize logs")
-    logs = st.text_area("Enter your app logs here...", value=st.session_state.ticket)
+    logs = st.text_area("Enter your logs here (App/Web and DB)...", value=st.session_state.ticket)
     if logs and llm:
         prompt = PromptTemplate.from_template(
             """Analyze the following log data for the application service 'X'. Identify the most likely root cause of the incident that occurred between [Start Time] and [End Time]. Provide a detailed explanation of the causal chain of events, and suggest at least three specific improvements to prevent a recurrence and improve future troubleshooting efforts:
@@ -331,6 +331,7 @@ PROCEDURE DIVISION.
                     st.code(translated_code, language="java")
                 else:
                     st.code(translated_code, language="csharp")
+
 
 
 
