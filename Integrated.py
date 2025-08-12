@@ -239,7 +239,95 @@ elif step == "9. App Log Analyser":
             st.session_state.ticket = logs
         except Exception as e:
             st.error(f"❌ Error generating summary: {e}")
+######======================================================= Legacy Code Conversion Block ============================================================
+elif step == "10. Legacy Code Convertor":
+    st.set_page_config(page_title="Code Translator", page_icon="📝")
+    st.title("Legacy Code Translator ⚙️")
+    st.markdown("Use this tool to translate your legacy code (e.g., Cobol, Fortran) into modern languages.")
 
-# elif step == "10. Legacy Code Convertor":
+# --- Function to call the OpenAI API for translation ---
+def translate_code_with_openai(source_code, target_language):
+    """
+    Calls the OpenAI API to translate source code into a target language.
+    """
+    if not client:
+        return "❌ An error occurred during translation: OpenAI client is not initialized. Please check your API key."
+    try:
+        # Construct the prompt for the OpenAI model
+        prompt = f"""
+You are a highly skilled software engineer tasked with migrating legacy code.
+Please convert the following code into {target_language}.
+Analyze the original code's logic and functionality to ensure the translated code is accurate and idiomatic for the new language.
+The original code is in a language like Cobol or Fortran.
+
+Original Code:
+```{source_code}```
+
+Translated Code:
+"""
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",  # You can choose a different model if you prefer
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant that translates code.",
+                },
+                {"role": "user", "content": prompt},
+            ],
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"❌ An error occurred during translation: {e}"
+
+
+# --- UI elements for user input ---
+st.subheader("1. Select Target Language")
+target_language = st.selectbox(
+    "Choose the language you want to translate the code to:",
+    ("Python", "Java", "C# (.NET)"),
+)
+
+st.subheader("2. Enter Source Code")
+source_code = st.text_area(
+    "Paste your source code here (e.g., Cobol, Fortran)",
+    height=300,
+    value="""
+IDENTIFICATION DIVISION.
+PROGRAM-ID. HELLO-WORLD.
+DATA DIVISION.
+WORKING-STORAGE SECTION.
+01 GREETING PIC X(20) VALUE "Hello, World!".
+PROCEDURE DIVISION.
+    DISPLAY GREETING.
+    STOP RUN.
+""",
+)
+
+st.subheader("3. Generate Translated Code")
+
+if st.button("🚀 Translate Code"):
+    if not API_KEY:
+        st.warning(
+            "Please set your OPENAI_API_KEY in a .env file to enable translation."
+        )
+    elif source_code:
+        st.info(f"🤖 AI is translating your code to {target_language}...")
+
+        # Call the new function to get the translated code from OpenAI
+        translated_code = translate_code_with_openai(source_code, target_language)
+
+        st.subheader(f"✅ Translated {target_language} Code")
+
+        # Display the code with the correct syntax highlighting
+        if "Python" in target_language:
+            st.code(translated_code, language="python")
+        elif "Java" in target_language:
+            st.code(translated_code, language="java")
+        else:  # C#
+            st.code(translated_code, language="csharp")
+    else:
+        st.warning("Please enter some source code to translate.")
+
+
 
 
