@@ -250,7 +250,7 @@ def translate_code_with_openai(source_code, target_language):
     """
     Calls the OpenAI API to translate source code into a target language.
     """
-    if not client:
+    if not os.environ["OPENAI_API_KEY"]:
         return "❌ An error occurred during translation: OpenAI client is not initialized. Please check your API key."
     try:
         # Construct the prompt for the OpenAI model
@@ -327,6 +327,7 @@ if st.button("🚀 Translate Code"):
             st.code(translated_code, language="csharp")
     else:
         st.warning("Please enter some source code to translate.")
+
 
 
 
