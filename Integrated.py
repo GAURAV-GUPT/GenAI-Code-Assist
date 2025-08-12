@@ -27,7 +27,7 @@ st.set_page_config(page_title="GenAI Full Dev Assistant")
 # st.title("🧠 GenAI - BAU Support Assistant")
 
 step = st.sidebar.radio(
-    "Available Agents:",
+    "**Available Agents:**",
     [
         "1. Ticket Summarization",
         # "2. Codebase Ingestion",
@@ -241,3 +241,4 @@ elif step == "9. App Log Analyser":
             st.error(f"❌ Error generating summary: {e}")
 
 # elif step == "10. Legacy Code Convertor":
+
