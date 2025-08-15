@@ -426,6 +426,7 @@ You are an expert Automotive Remote Diagnostics AI Agent. Your goal is to analyz
 * **Probable Cause:** Based on the DTC and vehicle model, list the most likely technical causes (e.g., "Faulty spark plug in cylinder 1," "Clogged catalytic converter," "Oxygen sensor malfunction").
 * **Recommended Diagnostic Steps:** Outline the steps a technician should take to confirm the diagnosis.
 * **Suggested Parts to Pre-order:** List any specific parts that the dealership should consider ordering in advance to expedite the repair (e.g., "Ignition Coil Pack (Part # 8C-2345)", "Upstream O2 Sensor (Part # 9A-1102)").
+* **Recommended to buy:** Provide online lnk to buy the part.
 """
         )
 
@@ -439,5 +440,6 @@ You are an expert Automotive Remote Diagnostics AI Agent. Your goal is to analyz
                     report = chain.run(vehicle_model=vehicle_model, dtc_code=dtc_code)
                     st.write("###  Diagnostics & Service Report:")
                     st.markdown(report)
+
 
 
