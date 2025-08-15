@@ -1,4 +1,4 @@
-# Full GenAI Developer Assistant (Steps 1 to 8 Integrated - Final Fixed)
+# Full GenAI Developer Assistant (Steps 1 to 11 Integrated - Predictive Maintenance Added)
 import os
 import streamlit as st
 import pandas as pd
@@ -11,6 +11,7 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.docstore.document import Document
 from openai import OpenAI
+import numpy as np
 
 # Load .env for OpenAI key
 load_dotenv()
@@ -20,7 +21,7 @@ os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 # --- Initial App Setup ---
 st.set_page_config(page_title="AI for IT - Assistant", layout="wide")
 st.title("🧠 **AI for IT - Assistant**")
-st.markdown("A multi-agent AI assistant for various IT tasks, from ticket analysis to code generation.")
+st.markdown("A multi-agent AI assistant for various IT tasks, from ticket analysis to predictive maintenance.")
 
 # Initialize the OpenAI LLM and Client
 # It's good practice to do this once at the top
@@ -73,15 +74,16 @@ step = st.sidebar.radio(
     "**Available Agents:**",
     [
         "1. Ticket Summarization",
-       # "2. Codebase Ingestion",
-       # "3. Code Search",
-       # "4. Modification Plan",
-       # "5. Few-Shot Prompt (Optional)",
-         "6. Code Generation",
-       # "7. Code Validation",
-       # "8. Git Commit + Push",
+        # "2. Codebase Ingestion",
+        # "3. Code Search",
+        # "4. Modification Plan",
+        # "5. Few-Shot Prompt (Optional)",
+        "6. Code Generation",
+        # "7. Code Validation",
+        # "8. Git Commit + Push",
         "9. App Log Analyser",
-        "10. Legacy Code Convertor"
+        "10. Legacy Code Convertor",
+        "11. Predictive Maintenance" # New Agent Added
     ],
 )
 
@@ -332,17 +334,67 @@ PROCEDURE DIVISION.
                 else:
                     st.code(translated_code, language="csharp")
 
+# --- NEW: Predictive Maintenance Agent ---
+elif step == "11. Predictive Maintenance":
+    st.subheader("🏭 Predictive Maintenance Agent for Factory Floor")
+    st.markdown("Upload sensor data from factory machinery to predict potential failures.")
 
+    # 1. Provide a sample data format for the user
+    st.info("""
+    **Data Format Guide:**
+    Please upload a CSV file with the following columns:
+    - `timestamp`: The date and time of the reading.
+    - `machine_id`: A unique identifier for the machine (e.g., 'CNC-001', 'ROBOT-ARM-05').
+    - `vibration_hz`: Vibration level in Hertz.
+    - `temperature_c`: Temperature in Celsius.
+    - `power_kw`: Power consumption in Kilowatts.
+    - `error_code`: Any error code reported by the machine (0 if none).
+    """)
 
+    # 2. File uploader
+    uploaded_file = st.file_uploader("Upload your sensor data (CSV)", type="csv")
 
+    if uploaded_file is not None and llm:
+        try:
+            # Read the data into a pandas DataFrame
+            df = pd.read_csv(uploaded_file)
+            st.write("### Sensor Data Preview:")
+            st.dataframe(df.head())
 
+            # Convert dataframe to a string format suitable for the LLM
+            data_string = df.to_string(index=False)
 
+            # 3. Create a detailed prompt for the LLM
+            maintenance_prompt = PromptTemplate.from_template(
+                """
+You are an expert Predictive Maintenance AI Agent for an automotive factory floor.
+Your task is to analyze the following real-time sensor data from our machinery and provide a detailed maintenance report.
 
+**Sensor Data:**
+```
+{sensor_data}
+```
 
+**Instructions:**
+1.  **Analyze the Data:** Carefully examine the trends in vibration, temperature, and power consumption for each machine. Pay close attention to any anomalies, spikes, or gradual increases that deviate from normal operating parameters.
+2.  **Identify At-Risk Machinery:** Clearly state which machine (by `machine_id`) is showing the strongest indicators of an impending failure.
+3.  **Provide Root Cause Analysis:** Explain *why* you believe this machine is at risk. Reference specific data points and trends from the provided data (e.g., "Vibration for CNC-002 has increased by 15% over the last 24 hours while temperature is also rising, suggesting bearing wear.").
+4.  **Estimate Time to Failure (TTF):** Provide a qualitative estimate of the urgency (e.g., "Critical: Failure likely within 24-48 hours", "Warning: Maintenance recommended within the next 7 days", "Stable: No immediate action required").
+5.  **Recommend Actionable Steps:** List clear, specific maintenance actions to be taken. For example:
+    - "Schedule immediate inspection of the main spindle bearing on CNC-002."
+    - "Lubricate the primary joints of ROBOT-ARM-05."
+    - "Order a replacement for part number 74B-221."
+6.  **Format your response** as a clear, professional report. Use markdown for headings and bullet points.
+"""
+            )
 
+            # 4. Run the analysis
+            if st.button("🤖 Analyze and Predict Failures"):
+                with st.spinner("Analyzing sensor data and predicting outcomes..."):
+                    chain = LLMChain(llm=llm, prompt=maintenance_prompt)
+                    report = chain.run(sensor_data=data_string)
+                    st.write("###  Predictive Maintenance Report:")
+                    st.markdown(report)
 
-
-
-
-
-
+        except Exception as e:
+            st.error(f"❌ An error occurred while processing the file: {e}")
