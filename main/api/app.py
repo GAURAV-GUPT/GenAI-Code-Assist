@@ -1,7 +1,7 @@
 {
   "builds": [
     {
-      "src": "api/Integrated.py",
+      "src": "api/app.py",
       "use": "@vercel/python",
       "config": {
         "maxLambdaSize": "15mb",
@@ -12,7 +12,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "api/Integrated.py"
+      "dest": "api/app.py"
     }
   ]
 }
