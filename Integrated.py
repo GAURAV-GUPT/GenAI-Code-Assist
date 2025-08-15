@@ -19,9 +19,9 @@ load_dotenv()
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
 # --- Initial App Setup ---
-st.set_page_config(page_title="AI for IT - Assistant", layout="wide")
-st.title("🧠 **AI for IT - Assistant**")
-st.markdown("A multi-agent AI assistant for various IT tasks, from ticket analysis to remote diagnostics.")
+st.set_page_config(page_title="AI Assistant", layout="wide")
+st.title("🧠 **AI - Assistant**")
+st.markdown("A multi-agent AI assistant for various tasks, from ticket analysis to remote diagnostics.")
 
 # Initialize the OpenAI LLM and Client
 # It's good practice to do this once at the top
@@ -439,4 +439,5 @@ You are an expert Automotive Remote Diagnostics AI Agent. Your goal is to analyz
                     report = chain.run(vehicle_model=vehicle_model, dtc_code=dtc_code)
                     st.write("###  Diagnostics & Service Report:")
                     st.markdown(report)
+
 
