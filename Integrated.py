@@ -400,8 +400,8 @@ elif step == "12. Remote Diagnostics":
     st.markdown("Analyze vehicle Diagnostic Trouble Codes (DTCs) to streamline the service process.")
 
     # 1. User Inputs
-    dtc_code = st.text_input("Enter the Diagnostic Trouble Code (DTC)", value="P0301")
-    vehicle_model = st.selectbox("Select Vehicle Model", ("Sedan X", "SUV Pro", "Electric Z", "Truck Titan"))
+    dtc_code = st.text_input("Enter the Diagnostic Trouble Code (DTC)", value="P0101")
+    vehicle_model = st.selectbox("Select Vehicle Model", ("Range Rover - Autobiography", "Range Rover Sport - Dynamic SE", "Range Rover Velar - Dynamic HSE", "Range Rover Evoque - S", "Discovery - Dynamic HSE","Jaguar F-PACE - R-Dynamic SE"))
 
     if llm:
         # 2. Create a detailed prompt for the diagnostics agent
@@ -439,3 +439,4 @@ You are an expert Automotive Remote Diagnostics AI Agent. Your goal is to analyz
                     report = chain.run(vehicle_model=vehicle_model, dtc_code=dtc_code)
                     st.write("###  Diagnostics & Service Report:")
                     st.markdown(report)
+
