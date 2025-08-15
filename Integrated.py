@@ -336,7 +336,7 @@ PROCEDURE DIVISION.
 
 # --- NEW: Predictive Maintenance Agent ---
 elif step == "11. Predictive Maintenance":
-    st.subheader("🏭 Predictive Maintenance Agent for Factory Floor")
+    st.subheader("🏭 Predictive Maintenance Agent for Plant Floor")
     st.markdown("Upload sensor data from factory machinery to predict potential failures.")
 
     # 1. Provide a sample data format for the user
@@ -398,3 +398,4 @@ Your task is to analyze the following real-time sensor data from our machinery a
 
         except Exception as e:
             st.error(f"❌ An error occurred while processing the file: {e}")
+
