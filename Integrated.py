@@ -1,4 +1,4 @@
-# Full GenAI Developer Assistant (Steps 1 to 11 Integrated - Predictive Maintenance Added)
+# Full GenAI Developer Assistant (Steps 1 to 12 Integrated - Diagnostics Agent Added)
 import os
 import streamlit as st
 import pandas as pd
@@ -21,7 +21,7 @@ os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 # --- Initial App Setup ---
 st.set_page_config(page_title="AI for IT - Assistant", layout="wide")
 st.title("🧠 **AI for IT - Assistant**")
-st.markdown("A multi-agent AI assistant for various IT tasks, from ticket analysis to predictive maintenance.")
+st.markdown("A multi-agent AI assistant for various IT tasks, from ticket analysis to remote diagnostics.")
 
 # Initialize the OpenAI LLM and Client
 # It's good practice to do this once at the top
@@ -83,7 +83,8 @@ step = st.sidebar.radio(
         # "8. Git Commit + Push",
         "9. App Log Analyser",
         "10. Legacy Code Convertor",
-        "11. Predictive Maintenance" # New Agent Added
+        "11. Predictive Maintenance",
+        "12. Remote Diagnostics" # New Agent Added
     ],
 )
 
@@ -334,12 +335,11 @@ PROCEDURE DIVISION.
                 else:
                     st.code(translated_code, language="csharp")
 
-# --- NEW: Predictive Maintenance Agent ---
+# --- Predictive Maintenance Agent ---
 elif step == "11. Predictive Maintenance":
-    st.subheader("🏭 Predictive Maintenance Agent for Plant Floor")
+    st.subheader("🏭 Predictive Maintenance Agent for Factory Floor")
     st.markdown("Upload sensor data from factory machinery to predict potential failures.")
 
-    # 1. Provide a sample data format for the user
     st.info("""
     **Data Format Guide:**
     Please upload a CSV file with the following columns:
@@ -351,20 +351,16 @@ elif step == "11. Predictive Maintenance":
     - `error_code`: Any error code reported by the machine (0 if none).
     """)
 
-    # 2. File uploader
     uploaded_file = st.file_uploader("Upload your sensor data (CSV)", type="csv")
 
     if uploaded_file is not None and llm:
         try:
-            # Read the data into a pandas DataFrame
             df = pd.read_csv(uploaded_file)
             st.write("### Sensor Data Preview:")
             st.dataframe(df.head())
 
-            # Convert dataframe to a string format suitable for the LLM
             data_string = df.to_string(index=False)
 
-            # 3. Create a detailed prompt for the LLM
             maintenance_prompt = PromptTemplate.from_template(
                 """
 You are an expert Predictive Maintenance AI Agent for an automotive factory floor.
@@ -388,7 +384,6 @@ Your task is to analyze the following real-time sensor data from our machinery a
 """
             )
 
-            # 4. Run the analysis
             if st.button("🤖 Analyze and Predict Failures"):
                 with st.spinner("Analyzing sensor data and predicting outcomes..."):
                     chain = LLMChain(llm=llm, prompt=maintenance_prompt)
@@ -399,3 +394,48 @@ Your task is to analyze the following real-time sensor data from our machinery a
         except Exception as e:
             st.error(f"❌ An error occurred while processing the file: {e}")
 
+# --- NEW: Remote Diagnostics & Service Booking Agent ---
+elif step == "12. Remote Diagnostics":
+    st.subheader("📡 Remote Diagnostics & Service Booking Agent")
+    st.markdown("Analyze vehicle Diagnostic Trouble Codes (DTCs) to streamline the service process.")
+
+    # 1. User Inputs
+    dtc_code = st.text_input("Enter the Diagnostic Trouble Code (DTC)", value="P0301")
+    vehicle_model = st.selectbox("Select Vehicle Model", ("Sedan X", "SUV Pro", "Electric Z", "Truck Titan"))
+
+    if llm:
+        # 2. Create a detailed prompt for the diagnostics agent
+        diagnostics_prompt = PromptTemplate.from_template(
+            """
+You are an expert Automotive Remote Diagnostics AI Agent. Your goal is to analyze a Diagnostic Trouble Code (DTC) and provide a clear, two-part report.
+
+**Vehicle Information:**
+- **Model:** {vehicle_model}
+- **DTC Code:** {dtc_code}
+
+---
+
+### **Part 1: Customer-Facing Report**
+* **What is the issue?** Explain the problem in simple, non-technical language that a car owner can easily understand.
+* **Severity Level:** Classify the severity on a scale: **Critical (Stop Driving Immediately)**, **High (Service Required Soon)**, **Medium (Monitor the Issue)**, or **Low (Informational)**.
+* **Recommended Action for Driver:** Provide a clear, direct instruction for the driver (e.g., "Please pull over safely and call for roadside assistance.", "We recommend booking a service appointment within the next 3-5 business days.").
+
+---
+
+### **Part 2: Dealership Service Request**
+* **Probable Cause:** Based on the DTC and vehicle model, list the most likely technical causes (e.g., "Faulty spark plug in cylinder 1," "Clogged catalytic converter," "Oxygen sensor malfunction").
+* **Recommended Diagnostic Steps:** Outline the steps a technician should take to confirm the diagnosis.
+* **Suggested Parts to Pre-order:** List any specific parts that the dealership should consider ordering in advance to expedite the repair (e.g., "Ignition Coil Pack (Part # 8C-2345)", "Upstream O2 Sensor (Part # 9A-1102)").
+"""
+        )
+
+        # 3. Run the analysis
+        if st.button("🔍 Diagnose Vehicle Issue"):
+            if not dtc_code:
+                st.warning("Please enter a DTC code to analyze.")
+            else:
+                with st.spinner(f"Diagnosing DTC {dtc_code} for {vehicle_model}..."):
+                    chain = LLMChain(llm=llm, prompt=diagnostics_prompt)
+                    report = chain.run(vehicle_model=vehicle_model, dtc_code=dtc_code)
+                    st.write("###  Diagnostics & Service Report:")
+                    st.markdown(report)
