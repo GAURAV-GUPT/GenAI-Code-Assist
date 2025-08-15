@@ -83,8 +83,8 @@ step = st.sidebar.radio(
         # "8. Git Commit + Push",
         "9. App Log Analyser",
         "10. Legacy Code Convertor",
-        "11. Predictive Maintenance",
-        "12. Remote Diagnostics" # New Agent Added
+        "11. Car Predictive Maintenance",
+        "12. Car Remote Diagnostics" # New Agent Added
     ],
 )
 
@@ -336,7 +336,7 @@ PROCEDURE DIVISION.
                     st.code(translated_code, language="csharp")
 
 # --- Predictive Maintenance Agent ---
-elif step == "11. Predictive Maintenance":
+elif step == "11. Car Predictive Maintenance":
     st.subheader("🏭 Predictive Maintenance Agent for Factory Floor")
     st.markdown("Upload sensor data from factory machinery to predict potential failures.")
 
@@ -395,7 +395,7 @@ Your task is to analyze the following real-time sensor data from our machinery a
             st.error(f"❌ An error occurred while processing the file: {e}")
 
 # --- NEW: Remote Diagnostics & Service Booking Agent ---
-elif step == "12. Remote Diagnostics":
+elif step == "12. Car Remote Diagnostics":
     st.subheader("📡 Remote Diagnostics & Service Booking Agent")
     st.markdown("Analyze vehicle Diagnostic Trouble Codes (DTCs) to streamline the service process.")
 
@@ -426,7 +426,7 @@ You are an expert Automotive Remote Diagnostics AI Agent. Your goal is to analyz
 * **Probable Cause:** Based on the DTC and vehicle model, list the most likely technical causes (e.g., "Faulty spark plug in cylinder 1," "Clogged catalytic converter," "Oxygen sensor malfunction").
 * **Recommended Diagnostic Steps:** Outline the steps a technician should take to confirm the diagnosis.
 * **Suggested Parts to Pre-order:** List any specific parts that the dealership should consider ordering in advance to expedite the repair (e.g., "Ignition Coil Pack (Part # 8C-2345)", "Upstream O2 Sensor (Part # 9A-1102)").
-* **Recommended to buy:** Provide online lnk to buy the part.
+* **Recommended to buy:** Provide online link to buy the part.
 """
         )
 
@@ -440,6 +440,7 @@ You are an expert Automotive Remote Diagnostics AI Agent. Your goal is to analyz
                     report = chain.run(vehicle_model=vehicle_model, dtc_code=dtc_code)
                     st.write("###  Diagnostics & Service Report:")
                     st.markdown(report)
+
 
 
 
