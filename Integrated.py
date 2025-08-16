@@ -84,7 +84,8 @@ step = st.sidebar.radio(
         "9. App Log Analyser",
         "10. Legacy Code Convertor",
         "11. Equipment Predictive Maintenance",
-        "12. Car Remote Diagnostics" # New Agent Added
+        "12. Car Remote Diagnostics" # New Agent Added,
+        "13. Auto OEM Market Research" # 🆕 New Agent Added 16/08
     ],
 )
 
@@ -441,6 +442,61 @@ You are an expert Automotive Remote Diagnostics AI Agent. Your goal is to analyz
                     st.write("###  Diagnostics & Service Report:")
                     st.markdown(report)
 
+elif step == "13. Auto OEM Market Research":
+    st.subheader("📊 Auto OEM Market Research")
+    st.markdown("Compare different car trims from leading brands based on features, cost, and customer reviews.")
+
+    # Define the list of car brands and trims for the dropdowns
+    car_trims = [
+        "BMW - 3 Series Sedan",
+        "BMW - X5 SUV",
+        "Mercedes-Benz - C-Class Sedan",
+        "Mercedes-Benz - GLE SUV",
+        "Range Rover - Evoque S",
+        "Range Rover - Sport Dynamic SE",
+        "Aston Martin - Vantage",
+        "Aston Martin - DBX",
+    ]
+
+    # Create two dropdowns for comparison
+    trim1 = st.selectbox("Select Trim 1:", car_trims)
+    trim2 = st.selectbox("Select Trim 2:", car_trims)
+
+    if llm:
+        # Create a prompt to generate the comparison report
+        comparison_prompt = PromptTemplate.from_template(
+            """
+You are an expert Automotive Market Research Agent. Your task is to provide a detailed comparison between two car trims.
+Analyze and provide a tabular comparison of features (major and minor), cost, and customer reviews.
+Use a table format with columns for "Aspect", "Details for {trim1}", and "Details for {trim2}".
+For customer reviews, provide a star rating out of 5 and a brief summary.
+
+**Comparison Request:**
+- **Trim 1:** {trim1}
+- **Trim 2:** {trim2}
+
+---
+
+### **Tabular Comparison**
+| Aspect | Details for {trim1} | Details for {trim2} |
+|---|---|---|
+| **Major Features** | [List of major features] | [List of major features] |
+| **Minor Features** | [List of minor features] | [List of minor features] |
+| **Cost (MSRP)** | [Approximate MSRP] | [Approximate MSRP] |
+| **Customer Reviews** | [Star Rating out of 5] | [Star Rating out of 5] |
+| | [Brief Summary] | [Brief Summary] |
+"""
+        )
+
+        if st.button("📈 Compare Trims"):
+            if trim1 == trim2:
+                st.warning("Please select two different trims to compare.")
+            else:
+                with st.spinner(f"Comparing {trim1} and {trim2}..."):
+                    chain = LLMChain(llm=llm, prompt=comparison_prompt)
+                    comparison_report = chain.run(trim1=trim1, trim2=trim2)
+                    st.write("### 🚗 Comparison Report:")
+                    st.markdown(comparison_report)
 
 
 
