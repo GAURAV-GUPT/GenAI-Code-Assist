@@ -467,7 +467,7 @@ elif step == "13. Auto OEM Market Research":
         comparison_prompt = PromptTemplate.from_template(
             """
 You are an expert Automotive Market Research Agent. Your task is to provide a detailed comparison between two car trims.
-Analyze and provide a tabular comparison of features (major and minor), cost, and customer reviews.
+Analyze and provide a tabular comparison of features (major and minor) including Price-to-Feature Ratio and Efficiency Rating (MPG/MPGe), cost, and customer reviews.
 Use a table format with columns for "Aspect", "Details for {trim1}", and "Details for {trim2}".
 For customer reviews, provide a star rating out of 5 and a brief summary.
 
@@ -497,6 +497,7 @@ For customer reviews, provide a star rating out of 5 and a brief summary.
                     comparison_report = chain.run(trim1=trim1, trim2=trim2)
                     st.write("### 🚗 Comparison Report:")
                     st.markdown(comparison_report)
+
 
 
 
