@@ -443,7 +443,7 @@ You are an expert Automotive Remote Diagnostics AI Agent. Your goal is to analyz
                     st.markdown(report)
 
 elif step == "13. Auto OEM Market Research":
-    st.subheader("📊 Auto OEM Market Research")
+    st.subheader("🚗🆚🚙 Auto OEM Market Research")
     st.markdown("Compare different car trims from leading brands based on features, cost, and customer reviews.")
 
     # Define the list of car brands and trims for the dropdowns
@@ -497,6 +497,7 @@ For customer reviews, provide a star rating out of 5 and a brief summary.
                     comparison_report = chain.run(trim1=trim1, trim2=trim2)
                     st.write("### 🚗 Comparison Report:")
                     st.markdown(comparison_report)
+
 
 
 
