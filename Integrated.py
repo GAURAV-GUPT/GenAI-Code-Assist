@@ -84,7 +84,7 @@ step = st.sidebar.radio(
         "9. App Log Analyser",
         "10. Legacy Code Convertor",
         "11. Equipment Predictive Maintenance",
-        "12. Car Remote Diagnostics" # New Agent Added,
+        "12. Car Remote Diagnostics",
         "13. Auto OEM Market Research" # 🆕 New Agent Added 16/08
     ],
 )
@@ -497,6 +497,7 @@ For customer reviews, provide a star rating out of 5 and a brief summary.
                     comparison_report = chain.run(trim1=trim1, trim2=trim2)
                     st.write("### 🚗 Comparison Report:")
                     st.markdown(comparison_report)
+
 
 
 
