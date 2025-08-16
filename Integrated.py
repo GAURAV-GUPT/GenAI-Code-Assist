@@ -83,7 +83,7 @@ step = st.sidebar.radio(
         # "8. Git Commit + Push",
         "9. App Log Analyser",
         "10. Legacy Code Convertor",
-        "11. Car Predictive Maintenance",
+        "11. Equipment Predictive Maintenance",
         "12. Car Remote Diagnostics" # New Agent Added
     ],
 )
@@ -336,7 +336,7 @@ PROCEDURE DIVISION.
                     st.code(translated_code, language="csharp")
 
 # --- Predictive Maintenance Agent ---
-elif step == "11. Car Predictive Maintenance":
+elif step == "11. Equipment Predictive Maintenance":
     st.subheader("🏭 Predictive Maintenance Agent for Factory Floor")
     st.markdown("Upload sensor data from factory machinery to predict potential failures.")
 
@@ -440,6 +440,7 @@ You are an expert Automotive Remote Diagnostics AI Agent. Your goal is to analyz
                     report = chain.run(vehicle_model=vehicle_model, dtc_code=dtc_code)
                     st.write("###  Diagnostics & Service Report:")
                     st.markdown(report)
+
 
 
 
