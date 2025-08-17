@@ -85,7 +85,8 @@ step = st.sidebar.radio(
         "10. Legacy Code Convertor",
         "11. Equipment Predictive Maintenance",
         "12. Car Remote Diagnostics",
-        "13. Auto OEM Market Research" # 🆕 New Agent Added 16/08
+        "13. Auto OEM Market Research", # 🆕 New Agent Added 16/08
+        "14. SDLC Multi-Agent" # 🆕 New Agent Added for SDLC
     ],
 )
 
@@ -499,6 +500,50 @@ For customer reviews, provide a star rating out of 5 and a brief summary.
                     st.markdown(comparison_report)
 
 
+# --- NEW: SDLC Multi-Agent Workflow ---
+elif step == "14. SDLC Multi-Agent":
+    st.subheader("🚀 SDLC Multi-Agent Workflow")
+    st.markdown("Automate key SDLC steps by orchestrating a team of AI agents.")
+    
+    # Agent 1: Upload a BRD document
+    st.subheader("1️⃣ Agent 1: Upload BRD Document")
+    brd_file = st.file_uploader("Upload your BRD (PDF or TXT)", type=["pdf", "txt"])
+    brd_content = ""
+    if brd_file:
+        # Assuming simple text extraction for a TXT file for now
+        if brd_file.type == "text/plain":
+            brd_content = brd_file.read().decode("utf-8")
+            st.success("✅ BRD document uploaded and read successfully.")
+        else:
+            st.warning("⚠️ Only plain text (.txt) files are supported at this time for direct reading.")
+            # For a real app, you would add a PDF text extraction library here
+    
+    if st.button("▶️ Run SDLC Agents"):
+        if not brd_content:
+            st.error("Please upload a BRD document to start the workflow.")
+        elif not llm:
+            st.error("LLM is not initialized. Please check your API key.")
+        else:
+            st.info("Starting the multi-agent SDLC workflow...")
+            
+            # Agent 2: Create User Stories
+            with st.spinner("2️⃣ Agent 2: Creating user stories from BRD..."):
+                user_stories = brd_to_user_stories(brd_content)
+                st.success("✅ User stories generated.")
+                st.subheader("📝 Generated User Stories:")
+                st.write(user_stories)
+                
+            # Agent 3: Create Test Cases
+            with st.spinner("3️⃣ Agent 3: Generating test cases for each user story..."):
+                test_cases = user_stories_to_test_cases(user_stories)
+                st.success("✅ Test cases generated.")
+                st.subheader("📋 Generated Test Cases:")
+                st.markdown(test_cases)
+            
+            st.balloons()
+            st.success("🎉 SDLC Multi-Agent workflow completed successfully!")
+
+# End of the code
 
 
 
