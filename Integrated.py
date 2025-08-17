@@ -67,6 +67,52 @@ Translated Code:
         return response.choices[0].message.content
     except Exception as e:
         return f"❌ An error occurred during translation: {e}"
+#=======================================================================================added for SDLC====================
+# --- NEW: Helper functions for SDLC Agents ---
+def brd_to_user_stories(brd_content):
+    """
+    Generates user stories from a Business Requirements Document (BRD) using an LLM.
+    """
+    if not llm:
+        return "LLM is not initialized. Cannot generate user stories."
+    
+    prompt = PromptTemplate.from_template(
+        """
+You are a product manager. Your task is to convert a Business Requirements Document (BRD) into a list of clear, concise user stories.
+Each user story should follow the format: "As a [user], I want to [action], so that I can [goal]."
+
+Here is the BRD content:
+{brd_content}
+
+Please provide the user stories:
+"""
+    )
+    chain = LLMChain(llm=llm, prompt=prompt)
+    return chain.run(brd_content=brd_content)
+
+def user_stories_to_test_cases(user_stories):
+    """
+    Generates test cases from a list of user stories using an LLM.
+    """
+    if not llm:
+        return "LLM is not initialized. Cannot generate test cases."
+    
+    prompt = PromptTemplate.from_template(
+        """
+You are a QA engineer. Your task is to generate detailed test cases for each of the following user stories.
+For each user story, provide at least one positive test case and one negative/edge case.
+Format your response clearly with headings for each user story and bullet points for the test cases.
+
+Here are the user stories:
+{user_stories}
+
+Please provide the test cases:
+"""
+    )
+    chain = LLMChain(llm=llm, prompt=prompt)
+    return chain.run(user_stories=user_stories)
+
+#========================================================================================end of SDLC agents============================
 
 # --- Streamlit UI and Logic ---
 
@@ -544,6 +590,7 @@ elif step == "14. SDLC Multi-Agent":
             st.success("🎉 SDLC Multi-Agent workflow completed successfully!")
 
 # End of the code
+
 
 
 
