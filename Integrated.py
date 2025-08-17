@@ -67,7 +67,7 @@ Translated Code:
         return response.choices[0].message.content
     except Exception as e:
         return f"❌ An error occurred during translation: {e}"
-#=======================================================================================added for SDLC====================
+
 # --- NEW: Helper functions for SDLC Agents ---
 def brd_to_user_stories(brd_content):
     """
@@ -89,6 +89,28 @@ Please provide the user stories:
     )
     chain = LLMChain(llm=llm, prompt=prompt)
     return chain.run(brd_content=brd_content)
+
+def user_stories_to_acceptance_criteria(user_stories):
+    """
+    Generates acceptance criteria from a list of user stories using an LLM.
+    """
+    if not llm:
+        return "LLM is not initialized. Cannot generate acceptance criteria."
+
+    prompt = PromptTemplate.from_template(
+        """
+You are a QA analyst. Your task is to generate detailed, verifiable acceptance criteria for each of the following user stories.
+For each user story, provide a list of criteria that must be met for the story to be considered complete.
+Format your response clearly with headings for each user story and a bulleted list for the acceptance criteria.
+
+Here are the user stories:
+{user_stories}
+
+Please provide the acceptance criteria:
+"""
+    )
+    chain = LLMChain(llm=llm, prompt=prompt)
+    return chain.run(user_stories=user_stories)
 
 def user_stories_to_test_cases(user_stories):
     """
@@ -112,8 +134,6 @@ Please provide the test cases:
     chain = LLMChain(llm=llm, prompt=prompt)
     return chain.run(user_stories=user_stories)
 
-#========================================================================================end of SDLC agents============================
-
 # --- Streamlit UI and Logic ---
 
 step = st.sidebar.radio(
@@ -131,8 +151,8 @@ step = st.sidebar.radio(
         "10. Legacy Code Convertor",
         "11. Equipment Predictive Maintenance",
         "12. Car Remote Diagnostics",
-        "13. Auto OEM Market Research", # 🆕 New Agent Added 16/08
-        "14. SDLC Multi-Agent" # 🆕 New Agent Added for SDLC
+        "13. Auto OEM Market Research",
+        "14. SDLC Multi-Agent"
     ],
 )
 
@@ -574,25 +594,56 @@ elif step == "14. SDLC Multi-Agent":
             
             # Agent 2: Create User Stories
             with st.spinner("2️⃣ Agent 2: Creating user stories from BRD..."):
-                user_stories = brd_to_user_stories(brd_content)
-                st.success("✅ User stories generated.")
-                st.subheader("📝 Generated User Stories:")
-                st.write(user_stories)
-                
-            # Agent 3: Create Test Cases
-            with st.spinner("3️⃣ Agent 3: Generating test cases for each user story..."):
-                test_cases = user_stories_to_test_cases(user_stories)
-                st.success("✅ Test cases generated.")
-                st.subheader("📋 Generated Test Cases:")
-                st.markdown(test_cases)
+                try:
+                    user_stories = brd_to_user_stories(brd_content)
+                    st.success("✅ User stories generated.")
+                    st.subheader("📝 Generated User Stories:")
+                    st.write(user_stories)
+                    st.download_button(
+                        label="⬇️ Download User Stories",
+                        data=user_stories,
+                        file_name="user_stories.txt",
+                        mime="text/plain",
+                    )
+                except Exception as e:
+                    st.error(f"❌ Error generating user stories: {e}")
+                    # Exit the workflow if this step fails
+                    st.stop()
+            
+            # Agent 3: Generate Acceptance Criteria
+            with st.spinner("3️⃣ Agent 3: Generating acceptance criteria..."):
+                try:
+                    acceptance_criteria = user_stories_to_acceptance_criteria(user_stories)
+                    st.success("✅ Acceptance criteria generated.")
+                    st.subheader("📋 Generated Acceptance Criteria:")
+                    st.markdown(acceptance_criteria)
+                    st.download_button(
+                        label="⬇️ Download Acceptance Criteria",
+                        data=acceptance_criteria,
+                        file_name="acceptance_criteria.txt",
+                        mime="text/plain",
+                    )
+                except Exception as e:
+                    st.error(f"❌ Error generating acceptance criteria: {e}")
+                    st.stop()
+            
+            # Agent 4: Create Test Cases
+            with st.spinner("4️⃣ Agent 4: Generating test cases..."):
+                try:
+                    test_cases = user_stories_to_test_cases(user_stories)
+                    st.success("✅ Test cases generated.")
+                    st.subheader("📋 Generated Test Cases:")
+                    st.markdown(test_cases)
+                    st.download_button(
+                        label="⬇️ Download Test Cases",
+                        data=test_cases,
+                        file_name="test_cases.txt",
+                        mime="text/plain",
+                    )
+                except Exception as e:
+                    st.error(f"❌ Error generating test cases: {e}")
+                    st.stop()
             
             st.balloons()
             st.success("🎉 SDLC Multi-Agent workflow completed successfully!")
-
-# End of the code
-
-
-
-
-
 
