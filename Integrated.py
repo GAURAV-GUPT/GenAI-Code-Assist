@@ -689,37 +689,38 @@ elif step == "15. Trade Negotiator Agent":
     if llm:
         # 2. Create a detailed prompt for the trade negotiator agent
         negotiator_prompt = PromptTemplate.from_template(
-            """
-You are an expert International Trade Negotiator and Market Analyst. Your task is to analyze various tariff and market scenarios for a UK-based automotive company and recommend the best export strategy.
+"""
+You are an expert International Trade Negotiator and Market Analyst. Your task is to draft a strategic market entry and mitigation plan for a UK automotive company, {company_name}, exporting its {car_model} to the USA.
 
-**Company Profile:**
-- **Company Name:** {company_name}
-- **Product:** {car_model} (a luxury car, manufactured in the UK)
-- **Home Market:** United Kingdom
-
-**Target Market Scenario:**
+**Current Situation Analysis:**
+- **Product:** {car_model} (a luxury car, manufactured in the UK).
 - **Target Market:** {target_market}
-- **Current Market Data:**
+- **Tariff Details:** The current tariff on this vehicle is {tariff_rate}% under the existing trade agreement.
+- **Market Data:**
+{market_data_input}
 
 ---
 
-### **Analysis Report**
+### **Strategic Recommendations:**
 
-1.  **Market Overview:** Provide a concise summary of the chosen target market, including key demand trends and regulatory landscape.
-2.  **Tariff and Non-Tariff Barriers:**
-    - Detail the specific tariffs and any potential non-tariff barriers (e.g., safety standards, import quotas, local content requirements) for exporting the `{car_model}` to `{target_market}`.
-    - Calculate the effective cost increase due to tariffs on a sample car priced at £50,000, using the provided tariff rate of {tariff_rate}%.
-3.  **Strategic Recommendations:** Suggest at least three actionable strategies for the company to achieve the best deal. These should be based on the provided data and your expert knowledge. Consider options like:
-    - Leveraging Free Trade Agreements (FTAs).
-    - Establishing a local assembly plant or distribution hub.
-    - Focusing on specific vehicle trims to meet market regulations.
-    - Engaging in lobbying or direct negotiation.
-4.  **Risk Assessment:** Identify potential risks associated with the recommended strategies (e.g., political instability, currency fluctuations, changes in trade policy).
-5.  **Comparative Analysis (Optional but recommended):** Briefly compare the `{target_market}` to one or two other major markets (e.g., USA vs. EU) based on overall attractiveness, taking into account tariffs, market size, and regulatory complexity.
+1.  **Tariff Circumvention/Mitigation:** Identify and analyze potential strategies to legally minimize or avoid the {tariff_rate}% tax. Consider the viability of the following:
+    * **Rules of Origin**: Can we leverage components or manufacturing processes from countries with more favorable trade agreements to lower the effective tariff?
+    * **FTAs**: Are there any existing or potential Free Trade Agreements (e.g., UK-USA) that could be leveraged?
+    * **Reclassification**: Is it possible to reclassify the vehicle or its components to a lower-tariff category?
+    * **In-country Investment**: What are the pros and cons of establishing a local assembly or finishing plant in the USA to qualify for domestic status or government incentives (e.g., Inflation Reduction Act benefits)?
 
-Please format your response as a professional business report using markdown headings and bullet points.
-"""
-        )
+2.  **Financial Strategy:**
+    * **Pricing**: Recommend pricing strategies to absorb, pass on, or share the tariff cost.
+    * **Cost-Benefit Analysis**: Provide a high-level calculation showing the financial impact of the tariff on a single car priced at £50,000. Calculate the total landed cost with the tariff, and compare this to a scenario with a hypothetical 0% tariff.
+
+3.  **Policy and Public Relations Approach:**
+    * **Lobbying**: Suggest key government bodies or trade associations to engage with in the USA to advocate for a reduction or exemption of the tariff.
+    * **Public Relations**: Recommend a public messaging strategy that frames our company's position on the tariffs.
+
+4.  **Overall Commercial Team Briefing**: Summarize the key findings and provide a clear, prioritized list of three to five actionable steps for the commercial team to execute, including a recommended timeline (e.g., Short-term, Mid-term).
+
+Please format the response as a professional business memo using clear headings and bullet points.
+"""        )
 
         # 3. Run the analysis
         if st.button("📈 Generate Market Strategy Report"):
@@ -737,4 +738,5 @@ Please format your response as a professional business report using markdown hea
                     )
                     st.write("### 📈 Trade Strategy Report:")
                     st.markdown(report)
+
 
