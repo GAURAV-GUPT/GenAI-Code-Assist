@@ -152,7 +152,8 @@ step = st.sidebar.radio(
         "11. Equipment Predictive Maintenance",
         "12. Car Remote Diagnostics",
         "13. Auto OEM Market Research",
-        "14. SDLC Multi-Agent"
+        "14. SDLC Multi-Agent",
+        "15. Trade Negotiator Agent"  # <--- ADD THIS LINE
     ],
 )
 
@@ -647,3 +648,86 @@ elif step == "14. SDLC Multi-Agent":
             st.balloons()
             st.success("🎉 SDLC Multi-Agent workflow completed successfully!")
 
+elif step == "15. Trade Negotiator Agent":
+    st.subheader("🌐 Trade Negotiator Agent")
+    st.markdown("Analyze global tariff scenarios to find the best market entry strategy for UK-based car exports.")
+
+    # 1. User Inputs
+    company_name = st.text_input("Enter your company name:", value="UK Auto Co.")
+    car_model = st.text_input("Enter the car model to export:", value="Velar")
+    target_market = st.selectbox(
+        "Select Target Market:",
+        (
+            "USA",
+            "Canada",
+            "European Union (EU)",
+            "Australia",
+            "China",
+            "Japan",
+            "Brazil"
+        )
+    )
+
+    market_data_input = st.text_area(
+        "Provide current market data (e.g., tariff rates, regulations, demand trends):",
+        value="""- **USA:**
+    - Standard Tariff: 2.5% on passenger cars.
+    - Inflation Reduction Act (IRA) impact on EV tax credits.
+    - Strong demand for SUVs.
+- **European Union:**
+    - UK-EU Trade and Cooperation Agreement applies.
+    - Rules of Origin can affect zero-tariff status.
+    - High environmental standards.
+- **Other Markets:**
+    - Provide specific tariff and regulatory info here."""
+    )
+
+    if llm:
+        # 2. Create a detailed prompt for the trade negotiator agent
+        negotiator_prompt = PromptTemplate.from_template(
+            """
+You are an expert International Trade Negotiator and Market Analyst. Your task is to analyze various tariff and market scenarios for a UK-based automotive company and recommend the best export strategy.
+
+**Company Profile:**
+- **Company Name:** {company_name}
+- **Product:** {car_model} (a luxury car, manufactured in the UK)
+- **Home Market:** United Kingdom
+
+**Target Market Scenario:**
+- **Target Market:** {target_market}
+- **Current Market Data:**
+---
+
+### **Analysis Report**
+
+1.  **Market Overview:** Provide a concise summary of the chosen target market, including key demand trends and regulatory landscape.
+2.  **Tariff and Non-Tariff Barriers:**
+    - Detail the specific tariffs and any potential non-tariff barriers (e.g., safety standards, import quotas, local content requirements) for exporting the `{car_model}` to `{target_market}`.
+    - Calculate the effective cost increase due to tariffs on a sample car priced at £50,000.
+3.  **Strategic Recommendations:** Suggest at least three actionable strategies for the company to achieve the best deal. These should be based on the provided data and your expert knowledge. Consider options like:
+    - Leveraging Free Trade Agreements (FTAs).
+    - Establishing a local assembly plant or distribution hub.
+    - Focusing on specific vehicle trims to meet market regulations.
+    - Engaging in lobbying or direct negotiation.
+4.  **Risk Assessment:** Identify potential risks associated with the recommended strategies (e.g., political instability, currency fluctuations, changes in trade policy).
+5.  **Comparative Analysis (Optional but recommended):** Briefly compare the `{target_market}` to one or two other major markets (e.g., USA vs. EU) based on overall attractiveness, taking into account tariffs, market size, and regulatory complexity.
+
+Please format your response as a professional business report using markdown headings and bullet points.
+"""
+        )
+
+        # 3. Run the analysis
+        if st.button("📈 Generate Market Strategy Report"):
+            if not company_name or not car_model or not market_data_input:
+                st.warning("Please fill in all the details to generate the report.")
+            else:
+                with st.spinner(f"Analyzing market scenarios for {target_market}..."):
+                    chain = LLMChain(llm=llm, prompt=negotiator_prompt)
+                    report = chain.run(
+                        company_name=company_name,
+                        car_model=car_model,
+                        target_market=target_market,
+                        market_data=market_data_input
+                    )
+                    st.write("### 📈 Trade Strategy Report:")
+                    st.markdown(report)
