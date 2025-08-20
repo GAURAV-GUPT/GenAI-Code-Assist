@@ -21,7 +21,9 @@ os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 # --- Initial App Setup ---
 st.set_page_config(page_title="AI Assistant", layout="wide")
 st.title("🧠 **AI - Assistant**")
-st.markdown("A multi-agent AI assistant for various tasks, from ticket analysis to remote diagnostics.")
+st.markdown(
+    "A multi-agent AI assistant for various tasks, from ticket analysis to remote diagnostics."
+)
 
 # Initialize the OpenAI LLM and Client
 # It's good practice to do this once at the top
@@ -68,6 +70,7 @@ Translated Code:
     except Exception as e:
         return f"❌ An error occurred during translation: {e}"
 
+
 # --- NEW: Helper functions for SDLC Agents ---
 def brd_to_user_stories(brd_content):
     """
@@ -75,7 +78,7 @@ def brd_to_user_stories(brd_content):
     """
     if not llm:
         return "LLM is not initialized. Cannot generate user stories."
-    
+
     prompt = PromptTemplate.from_template(
         """
 You are a product manager. Your task is to convert a Business Requirements Document (BRD) into a list of clear, concise user stories.
@@ -89,6 +92,7 @@ Please provide the user stories:
     )
     chain = LLMChain(llm=llm, prompt=prompt)
     return chain.run(brd_content=brd_content)
+
 
 def user_stories_to_acceptance_criteria(user_stories):
     """
@@ -112,13 +116,14 @@ Please provide the acceptance criteria:
     chain = LLMChain(llm=llm, prompt=prompt)
     return chain.run(user_stories=user_stories)
 
+
 def user_stories_to_test_cases(user_stories):
     """
     Generates test cases from a list of user stories using an LLM.
     """
     if not llm:
         return "LLM is not initialized. Cannot generate test cases."
-    
+
     prompt = PromptTemplate.from_template(
         """
 You are a QA engineer. Your task is to generate detailed test cases for each of the following user stories.
@@ -133,6 +138,7 @@ Please provide the test cases:
     )
     chain = LLMChain(llm=llm, prompt=prompt)
     return chain.run(user_stories=user_stories)
+
 
 # --- Streamlit UI and Logic ---
 
@@ -153,7 +159,7 @@ step = st.sidebar.radio(
         "12. Car Remote Diagnostics",
         "13. Auto OEM Market Research",
         "14. SDLC Multi-Agent",
-        "15. Trade Negotiator Agent"  # <--- ADD THIS LINE
+        "15. Trade Negotiator Agent",  # <--- ADD THIS LINE
     ],
 )
 
@@ -341,7 +347,9 @@ elif step == "8. Git Commit + Push":
 
 elif step == "9. App Log Analyser":
     st.subheader("📝 Summarize logs")
-    logs = st.text_area("Enter your logs here (App/Web and DB)...", value=st.session_state.ticket)
+    logs = st.text_area(
+        "Enter your logs here (App/Web and DB)...", value=st.session_state.ticket
+    )
     if logs and llm:
         prompt = PromptTemplate.from_template(
             """Analyze the following log data for the application service 'X'. Identify the most likely root cause of the incident that occurred between [Start Time] and [End Time]. Provide a detailed explanation of the causal chain of events, and suggest at least three specific improvements to prevent a recurrence and improve future troubleshooting efforts:
@@ -358,18 +366,22 @@ elif step == "9. App Log Analyser":
 # --- Legacy Code Conversion Block (Fixed) ---
 elif step == "10. Legacy Code Convertor":
     st.title("Legacy Code Translator ⚙️")
-    st.markdown("Use this tool to translate your legacy code (e.g., Cobol, Fortran) into modern languages.")
-    
+    st.markdown(
+        "Use this tool to translate your legacy code (e.g., Cobol, Fortran) into modern languages."
+    )
+
     # Check if the client was initialized successfully
     if not openai_initialized:
-        st.warning("⚠️ OpenAI client is not initialized. Please set your OPENAI_API_KEY in a `.env` file.")
+        st.warning(
+            "⚠️ OpenAI client is not initialized. Please set your OPENAI_API_KEY in a `.env` file."
+        )
     else:
         st.subheader("1. Select Target Language")
         target_language = st.selectbox(
             "Choose the language you want to translate the code to:",
             ("Python", "Java", "C# (.NET)"),
         )
-    
+
         st.subheader("2. Enter Source Code")
         source_code = st.text_area(
             "Paste your source code here (e.g., Cobol, Fortran)",
@@ -391,8 +403,12 @@ PROCEDURE DIVISION.
             if not source_code:
                 st.warning("Please enter some source code to translate.")
             else:
-                with st.spinner(f"🤖 AI is translating your code to {target_language}..."):
-                    translated_code = translate_code_with_openai(openai_client, source_code, target_language)
+                with st.spinner(
+                    f"🤖 AI is translating your code to {target_language}..."
+                ):
+                    translated_code = translate_code_with_openai(
+                        openai_client, source_code, target_language
+                    )
 
                 st.subheader(f"✅ Translated {target_language} Code")
 
@@ -407,9 +423,12 @@ PROCEDURE DIVISION.
 # --- Predictive Maintenance Agent ---
 elif step == "11. Equipment Predictive Maintenance":
     st.subheader("🏭 Predictive Maintenance Agent for Factory Floor")
-    st.markdown("Upload sensor data from factory machinery to predict potential failures.")
+    st.markdown(
+        "Upload sensor data from factory machinery to predict potential failures."
+    )
 
-    st.info("""
+    st.info(
+        """
     **Data Format Guide:**
     Please upload a CSV file with the following columns:
     - `timestamp`: The date and time of the reading.
@@ -418,7 +437,8 @@ elif step == "11. Equipment Predictive Maintenance":
     - `temperature_c`: Temperature in Celsius.
     - `power_kw`: Power consumption in Kilowatts.
     - `error_code`: Any error code reported by the machine (0 if none).
-    """)
+    """
+    )
 
     uploaded_file = st.file_uploader("Upload your sensor data (CSV)", type="csv")
 
@@ -466,11 +486,23 @@ Your task is to analyze the following real-time sensor data from our machinery a
 # --- NEW: Remote Diagnostics & Service Booking Agent ---
 elif step == "12. Car Remote Diagnostics":
     st.subheader("📡 Remote Diagnostics & Service Booking Agent")
-    st.markdown("Analyze vehicle Diagnostic Trouble Codes (DTCs) to streamline the service process.")
+    st.markdown(
+        "Analyze vehicle Diagnostic Trouble Codes (DTCs) to streamline the service process."
+    )
 
     # 1. User Inputs
     dtc_code = st.text_input("Enter the Diagnostic Trouble Code (DTC)", value="P0101")
-    vehicle_model = st.selectbox("Select Vehicle Model", ("Range Rover - Autobiography", "Range Rover Sport - Dynamic SE", "Range Rover Velar - Dynamic HSE", "Range Rover Evoque - S", "Discovery - Dynamic HSE","Jaguar F-PACE - R-Dynamic SE"))
+    vehicle_model = st.selectbox(
+        "Select Vehicle Model",
+        (
+            "Range Rover - Autobiography",
+            "Range Rover Sport - Dynamic SE",
+            "Range Rover Velar - Dynamic HSE",
+            "Range Rover Evoque - S",
+            "Discovery - Dynamic HSE",
+            "Jaguar F-PACE - R-Dynamic SE",
+        ),
+    )
 
     if llm:
         # 2. Create a detailed prompt for the diagnostics agent
@@ -512,7 +544,9 @@ You are an expert Automotive Remote Diagnostics AI Agent. Your goal is to analyz
 
 elif step == "13. Auto OEM Market Research":
     st.subheader("🚗🆚🚙 Auto OEM Market Research")
-    st.markdown("Compare different car trims from leading brands based on features, cost, and customer reviews.")
+    st.markdown(
+        "Compare different car trims from leading brands based on features, cost, and customer reviews."
+    )
 
     # Define the list of car brands and trims for the dropdowns
     car_trims = [
@@ -571,7 +605,7 @@ For customer reviews, provide a star rating out of 5 and a brief summary.
 elif step == "14. SDLC Multi-Agent":
     st.subheader("🚀 SDLC Multi-Agent Workflow")
     st.markdown("Automate key SDLC steps by orchestrating a team of AI agents.")
-    
+
     # Agent 1: Upload a BRD document
     st.subheader("1️⃣ Agent 1: Upload BRD Document")
     brd_file = st.file_uploader("Upload your BRD (PDF or TXT)", type=["pdf", "txt"])
@@ -582,9 +616,11 @@ elif step == "14. SDLC Multi-Agent":
             brd_content = brd_file.read().decode("utf-8")
             st.success("✅ BRD document uploaded and read successfully.")
         else:
-            st.warning("⚠️ Only plain text (.txt) files are supported at this time for direct reading.")
+            st.warning(
+                "⚠️ Only plain text (.txt) files are supported at this time for direct reading."
+            )
             # For a real app, you would add a PDF text extraction library here
-    
+
     if st.button("▶️ Run SDLC Agents"):
         if not brd_content:
             st.error("Please upload a BRD document to start the workflow.")
@@ -592,7 +628,7 @@ elif step == "14. SDLC Multi-Agent":
             st.error("LLM is not initialized. Please check your API key.")
         else:
             st.info("Starting the multi-agent SDLC workflow...")
-            
+
             # Agent 2: Create User Stories
             with st.spinner("2️⃣ Agent 2: Creating user stories from BRD..."):
                 try:
@@ -610,11 +646,13 @@ elif step == "14. SDLC Multi-Agent":
                     st.error(f"❌ Error generating user stories: {e}")
                     # Exit the workflow if this step fails
                     st.stop()
-            
+
             # Agent 3: Generate Acceptance Criteria
             with st.spinner("3️⃣ Agent 3: Generating acceptance criteria..."):
                 try:
-                    acceptance_criteria = user_stories_to_acceptance_criteria(user_stories)
+                    acceptance_criteria = user_stories_to_acceptance_criteria(
+                        user_stories
+                    )
                     st.success("✅ Acceptance criteria generated.")
                     st.subheader("📋 Generated Acceptance Criteria:")
                     st.markdown(acceptance_criteria)
@@ -627,7 +665,7 @@ elif step == "14. SDLC Multi-Agent":
                 except Exception as e:
                     st.error(f"❌ Error generating acceptance criteria: {e}")
                     st.stop()
-            
+
             # Agent 4: Create Test Cases
             with st.spinner("4️⃣ Agent 4: Generating test cases..."):
                 try:
@@ -644,13 +682,15 @@ elif step == "14. SDLC Multi-Agent":
                 except Exception as e:
                     st.error(f"❌ Error generating test cases: {e}")
                     st.stop()
-            
+
             st.balloons()
             st.success("🎉 SDLC Multi-Agent workflow completed successfully!")
 
 elif step == "15. Trade Negotiator Agent":
     st.subheader("🌐 Trade Negotiator Agent")
-    st.markdown("Analyze global tariff scenarios to find the best market entry strategy for UK-based car exports.")
+    st.markdown(
+        "Analyze global tariff scenarios to find the best market entry strategy for UK-based car exports."
+    )
 
     # 1. User Inputs
     company_name = st.text_input("Enter your company name:", value="UK Auto Co.")
@@ -664,8 +704,8 @@ elif step == "15. Trade Negotiator Agent":
             "Australia",
             "China",
             "Japan",
-            "Brazil"
-        )
+            "Brazil",
+        ),
     )
 
     # NEW: Get the tariff rate directly from the user
@@ -675,7 +715,7 @@ elif step == "15. Trade Negotiator Agent":
         max_value=100.0,
         value=2.5,  # Default value
         step=0.1,
-        format="%.1f"
+        format="%.1f",
     )
 
     # The market data input is now an optional text area for additional information
@@ -683,13 +723,13 @@ elif step == "15. Trade Negotiator Agent":
         "Provide any other relevant market data (regulations, demand trends, etc.):",
         value="""- Inflation Reduction Act (IRA) impact on EV tax credits.
 - Strong demand for SUVs.
-- High environmental standards."""
+- High environmental standards.""",
     )
 
     if llm:
         # 2. Create a detailed prompt for the trade negotiator agent
         negotiator_prompt = PromptTemplate.from_template(
-"""
+            """
 You are an expert International Trade Negotiator and Market Analyst. Your task is to draft a strategic market entry and mitigation plan for a UK automotive company, {company_name}, exporting its {car_model} to the USA.
 
 **Current Situation Analysis:**
@@ -720,12 +760,13 @@ You are an expert International Trade Negotiator and Market Analyst. Your task i
 4.  **Overall Commercial Team Briefing**: Summarize the key findings and provide a clear, prioritized list of three to five actionable steps for the commercial team to execute, including a recommended timeline (e.g., Short-term, Mid-term).
 
 Please format the response as a professional business memo using clear headings and bullet points.
-"""        )
+"""
+        )
 
         # 3. Run the analysis
-       if st.button("📈 Generate Market Strategy Report"):
-    if not company_name or not car_model or not tariff_rate:
-        st.warning("Please fill in all the details to generate the report.")
+    if st.button("📈 Generate Market Strategy Report"):
+        if not company_name or not car_model or not tariff_rate:
+            st.warning("Please fill in all the details to generate the report.")
     else:
         with st.spinner(f"Analyzing market scenarios for {target_market}..."):
             chain = LLMChain(llm=llm, prompt=negotiator_prompt)
@@ -735,10 +776,7 @@ Please format the response as a professional business memo using clear headings 
                 target_market=target_market,
                 tariff_rate=tariff_rate,
                 # Corrected variable name below
-                market_data_input=market_data_input
+                market_data_input=market_data_input,
             )
             st.write("### 📈 Trade Strategy Report:")
             st.markdown(report)
-
-
-
