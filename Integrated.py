@@ -668,18 +668,22 @@ elif step == "15. Trade Negotiator Agent":
         )
     )
 
+    # NEW: Get the tariff rate directly from the user
+    tariff_rate = st.number_input(
+        "Enter the current tariff rate for this market (in %):",
+        min_value=0.0,
+        max_value=100.0,
+        value=2.5,  # Default value
+        step=0.1,
+        format="%.1f"
+    )
+
+    # The market data input is now an optional text area for additional information
     market_data_input = st.text_area(
-        "Provide current market data (e.g., tariff rates, regulations, demand trends):",
-        value="""- **USA:**
-    - Standard Tariff: 2.5% on passenger cars.
-    - Inflation Reduction Act (IRA) impact on EV tax credits.
-    - Strong demand for SUVs.
-- **European Union:**
-    - UK-EU Trade and Cooperation Agreement applies.
-    - Rules of Origin can affect zero-tariff status.
-    - High environmental standards.
-- **Other Markets:**
-    - Provide specific tariff and regulatory info here."""
+        "Provide any other relevant market data (regulations, demand trends, etc.):",
+        value="""- Inflation Reduction Act (IRA) impact on EV tax credits.
+- Strong demand for SUVs.
+- High environmental standards."""
     )
 
     if llm:
@@ -696,6 +700,7 @@ You are an expert International Trade Negotiator and Market Analyst. Your task i
 **Target Market Scenario:**
 - **Target Market:** {target_market}
 - **Current Market Data:**
+
 ---
 
 ### **Analysis Report**
@@ -703,7 +708,7 @@ You are an expert International Trade Negotiator and Market Analyst. Your task i
 1.  **Market Overview:** Provide a concise summary of the chosen target market, including key demand trends and regulatory landscape.
 2.  **Tariff and Non-Tariff Barriers:**
     - Detail the specific tariffs and any potential non-tariff barriers (e.g., safety standards, import quotas, local content requirements) for exporting the `{car_model}` to `{target_market}`.
-    - Calculate the effective cost increase due to tariffs on a sample car priced at £50,000.
+    - Calculate the effective cost increase due to tariffs on a sample car priced at £50,000, using the provided tariff rate of {tariff_rate}%.
 3.  **Strategic Recommendations:** Suggest at least three actionable strategies for the company to achieve the best deal. These should be based on the provided data and your expert knowledge. Consider options like:
     - Leveraging Free Trade Agreements (FTAs).
     - Establishing a local assembly plant or distribution hub.
@@ -718,7 +723,7 @@ Please format your response as a professional business report using markdown hea
 
         # 3. Run the analysis
         if st.button("📈 Generate Market Strategy Report"):
-            if not company_name or not car_model or not market_data_input:
+            if not company_name or not car_model or not tariff_rate:
                 st.warning("Please fill in all the details to generate the report.")
             else:
                 with st.spinner(f"Analyzing market scenarios for {target_market}..."):
@@ -727,7 +732,9 @@ Please format your response as a professional business report using markdown hea
                         company_name=company_name,
                         car_model=car_model,
                         target_market=target_market,
+                        tariff_rate=tariff_rate,  # Pass the new input to the chain
                         market_data=market_data_input
                     )
                     st.write("### 📈 Trade Strategy Report:")
                     st.markdown(report)
+
