@@ -723,20 +723,22 @@ Please format the response as a professional business memo using clear headings 
 """        )
 
         # 3. Run the analysis
-        if st.button("📈 Generate Market Strategy Report"):
-            if not company_name or not car_model or not tariff_rate:
-                st.warning("Please fill in all the details to generate the report.")
-            else:
-                with st.spinner(f"Analyzing market scenarios for {target_market}..."):
-                    chain = LLMChain(llm=llm, prompt=negotiator_prompt)
-                    report = chain.run(
-                        company_name=company_name,
-                        car_model=car_model,
-                        target_market=target_market,
-                        tariff_rate=tariff_rate,  # Pass the new input to the chain
-                        market_data=market_data_input
-                    )
-                    st.write("### 📈 Trade Strategy Report:")
-                    st.markdown(report)
+       if st.button("📈 Generate Market Strategy Report"):
+    if not company_name or not car_model or not tariff_rate:
+        st.warning("Please fill in all the details to generate the report.")
+    else:
+        with st.spinner(f"Analyzing market scenarios for {target_market}..."):
+            chain = LLMChain(llm=llm, prompt=negotiator_prompt)
+            report = chain.run(
+                company_name=company_name,
+                car_model=car_model,
+                target_market=target_market,
+                tariff_rate=tariff_rate,
+                # Corrected variable name below
+                market_data_input=market_data_input
+            )
+            st.write("### 📈 Trade Strategy Report:")
+            st.markdown(report)
+
 
 
