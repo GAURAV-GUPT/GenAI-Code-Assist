@@ -159,7 +159,8 @@ step = st.sidebar.radio(
         "12. Car Remote Diagnostics",
         "13. Auto OEM Market Research",
         "14. SDLC Multi-Agent",
-        "15. Trade Negotiator Agent",  # <--- ADD THIS LINE
+        "15. Trade Negotiator Agent",  
+        "16. Automotive Campaigns Creation" # <--- ADD THIS LINE
     ],
 )
 
@@ -789,3 +790,77 @@ Please format the response as a clear, professional recommendation report with d
                     st.write("### 📈 Trade Strategy Report:")
                     st.markdown(report)
 
+# Create new section in Streamlit sidebar
+elif step == "16. Automotive Campaigns Creation":
+    st.subheader("🚀 Automated Automotive Campaign Workflow")
+    st.markdown("Automate the entire campaign process from research to content.")
+
+    # 1. User Inputs
+    product_data = st.text_area("Enter key vehicle features, price, and target buyer profile:")
+    competitor_data = st.text_area("Enter key competitor details and market positioning:")
+
+    if st.button("▶️ Run Full Campaign Workflow"):
+        if not product_data or not competitor_data:
+            st.error("Please provide both product and competitor data to start.")
+            st.stop()
+
+        # Agent 1: Market Research Agent
+        with st.spinner("1/4: Analyzing market and generating strategy brief..."):
+            market_brief = run_market_research_agent(llm, product_data, competitor_data)
+            st.success("✅ Strategy brief generated.")
+            st.markdown("### 📈 Strategic Brief")
+            st.write(market_brief)
+
+        # Agent 2: Creative Strategy Agent
+        with st.spinner("2/4: Developing creative concepts and messaging..."):
+            creative_concept = run_creative_agent(llm, market_brief)
+            st.success("✅ Creative concept developed.")
+            st.markdown("### 🎨 Creative Concept")
+            st.write(creative_concept)
+
+        # Agent 3: Content Generation Agent
+        with st.spinner("3/4: Generating ad copy and assets..."):
+            digital_assets = run_content_agent(llm, creative_concept)
+            st.success("✅ Digital assets generated.")
+            st.markdown("### ✍️ Generated Content")
+            st.write(digital_assets)
+
+        # Agent 4: Campaign Execution Agent
+        with st.spinner("4/4: Generating deployable code and assets..."):
+            deployable_code = run_execution_agent(llm, digital_assets)
+            st.success("✅ Deployable code generated.")
+            st.markdown("### 💻 Deployable Code")
+            st.code(deployable_code, language="html") # or python, json etc.
+
+        st.balloons()
+        st.success("🎉 Campaign workflow completed successfully!")
+
+# Define the individual agent functions below this block
+def run_market_research_agent(llm, product_data, competitor_data):
+    # This function uses LLM to generate a strategic brief
+    prompt = PromptTemplate.from_template("""You are a market research analyst. Based on the following product and competitor data, write a strategic brief for an automotive campaign. The brief should identify the target audience, the unique selling proposition (USP), and a recommended positioning statement.
+    Product Data: {product_data}
+    Competitor Data: {competitor_data}""")
+    chain = LLMChain(llm=llm, prompt=prompt)
+    return chain.run(product_data=product_data, competitor_data=competitor_data)
+
+def run_creative_agent(llm, strategic_brief):
+    # This function uses LLM to generate a creative concept
+    prompt = PromptTemplate.from_template("""You are a creative director. Based on this strategic brief, develop a creative concept for an automotive campaign. The concept should include a core message, a campaign slogan, and key visual ideas.
+    Strategic Brief: {strategic_brief}""")
+    chain = LLMChain(llm=llm, prompt=prompt)
+    return chain.run(strategic_brief=strategic_brief)
+
+def run_content_agent(llm, creative_concept):
+    # This function generates ad copy and other digital assets
+    prompt = PromptTemplate.from_template("""You are a copywriter. Based on this creative concept, generate ad copy for social media (Twitter and Instagram) and a short video script (15 seconds) for the campaign.
+    Creative Concept: {creative_concept}""")
+    chain = LLMChain(llm=llm, prompt=prompt)
+    return chain.run(creative_concept=creative_concept)
+
+def run_execution_agent(llm, digital_assets):
+    # This function generates a simple landing page code with lead capture
+    prompt = PromptTemplate.from_template("""You are a front-end developer. Generate a simple HTML and CSS code for a landing page based on the following digital assets. The page should include a hero section with the slogan, and a simple lead capture form (name, email).
+    Digital Assets: {digital_assets}""")
+    chain = LLMChain(llm=llm, prompt=prompt)
+    return chain.run(digital_assets=digital_assets)
