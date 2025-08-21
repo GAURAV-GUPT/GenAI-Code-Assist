@@ -724,7 +724,7 @@ Please format the response as a clear, professional recommendation report with d
 
 # --- NEW: Automotive Campaigns Creation Agent ---
 elif step == "16. Automotive Campaigns Creation":
-    st.subheader("🚀 Automated Automotive Campaign Workflow")
+    st.subheader("🚀 Multi Agent Automated Automotive Campaign Creation")
     st.markdown("Automate the entire campaign process from research to content.")
 
     st.markdown("### 1. Provide Campaign Information")
@@ -790,3 +790,4 @@ elif step == "16. Automotive Campaigns Creation":
 
         st.balloons()
         st.success("🎉 Campaign workflow completed successfully!")
+
