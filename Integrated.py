@@ -767,7 +767,7 @@ You are an expert International Trade Negotiator and Market Analyst. Your task i
 
 4.  **Overall Commercial Team Briefing**: Summarize the key findings and provide a clear, prioritized list of three to five actionable steps for the commercial team to execute, including a recommended timeline (e.g., Short-term, Mid-term).
 
-Please format the response as a professional business memo using clear headings and bullet points.
+Please format the response as a clear, professional recommendation report with distinct sections. Do NOT use the term "memo".
 """
         )
 
