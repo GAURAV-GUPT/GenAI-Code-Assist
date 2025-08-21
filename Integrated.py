@@ -688,11 +688,9 @@ elif step == "14. SDLC Multi-Agent":
 
 elif step == "15. Trade Negotiator Agent":
     st.subheader("🌐 Trade Negotiator Agent")
-    st.markdown(
-        "Analyze global tariff scenarios to find the best market entry strategy for UK-based car exports."
-    )
+    st.markdown("Analyze global tariff scenarios to find the best market entry strategy for UK-based car exports.")
 
-    # 1. User Inputs
+    # 1. User Inputs for the agent
     company_name = st.text_input("Enter your company name:", value="UK Auto Co.")
     car_model = st.text_input("Enter the car model to export:", value="Velar")
     target_market = st.selectbox(
@@ -704,33 +702,39 @@ elif step == "15. Trade Negotiator Agent":
             "Australia",
             "China",
             "Japan",
-            "Brazil",
-        ),
+            "Brazil"
+        )
     )
 
-    # NEW: Get the tariff rate directly from the user
     tariff_rate = st.number_input(
         "Enter the current tariff rate for this market (in %):",
         min_value=0.0,
         max_value=100.0,
         value=2.5,  # Default value
         step=0.1,
-        format="%.1f",
+        format="%.1f"
     )
 
-    # The market data input is now an optional text area for additional information
+    base_price = st.number_input(
+        "Enter the base price of the car (in £):",
+        min_value=10000.0,
+        value=50000.0,
+        step=1000.0,
+        format="%.2f"
+    )
+    
     market_data_input = st.text_area(
         "Provide any other relevant market data (regulations, demand trends, etc.):",
         value="""- Inflation Reduction Act (IRA) impact on EV tax credits.
 - Strong demand for SUVs.
-- High environmental standards.""",
+- High environmental standards."""
     )
 
     if llm:
-        # 2. Create a detailed prompt for the trade negotiator agent
+        # 2. Create the prompt for the trade negotiator agent
         negotiator_prompt = PromptTemplate.from_template(
             """
-You are an expert International Trade Negotiator and Market Analyst. Your task is to draft a strategic market entry and mitigation plan for a UK automotive company, {company_name}, exporting its {car_model} to the USA.
+You are an expert International Trade Negotiator and Market Analyst. Your task is to draft a strategic market entry and mitigation plan for a UK automotive company, {company_name}, exporting its {car_model} to the {target_market}.
 
 **Current Situation Analysis:**
 - **Product:** {car_model} (a luxury car, manufactured in the UK).
@@ -738,6 +742,7 @@ You are an expert International Trade Negotiator and Market Analyst. Your task i
 - **Tariff Details:** The current tariff on this vehicle is {tariff_rate}% under the existing trade agreement.
 - **Market Data:**
 {market_data_input}
+- **Pricing Data:** The base price of the car is £{base_price}.
 
 ---
 
@@ -749,9 +754,12 @@ You are an expert International Trade Negotiator and Market Analyst. Your task i
     * **Reclassification**: Is it possible to reclassify the vehicle or its components to a lower-tariff category?
     * **In-country Investment**: What are the pros and cons of establishing a local assembly or finishing plant in the USA to qualify for domestic status or government incentives (e.g., Inflation Reduction Act benefits)?
 
-2.  **Financial Strategy:**
-    * **Pricing**: Recommend pricing strategies to absorb, pass on, or share the tariff cost.
-    * **Cost-Benefit Analysis**: Provide a high-level calculation showing the financial impact of the tariff on a single car priced at £50,000. Calculate the total landed cost with the tariff, and compare this to a scenario with a hypothetical 0% tariff.
+2.  **Financial and Pricing Strategy:**
+    * **Cost-Benefit Analysis**: Provide a high-level calculation showing the financial impact of the tariff on a single car with a base price of £{base_price}. Calculate the total landed cost with the tariff, and compare this to a scenario with a hypothetical 0% tariff.
+    * **Pricing Models**: Analyze the pros and cons of three specific pricing models to address the tariff.
+        1.  **Full Pass-Through**: Analyze the impact of passing the full {tariff_rate}% cost directly to the consumer. What are the risks to sales volume and brand perception?
+        2.  **Cost Absorption**: Analyze the impact of absorbing the full {tariff_rate}% cost to maintain a competitive price. What is the impact on our profit margins?
+        3.  **Hybrid Surcharge**: Analyze the impact of a transparent, separate tariff surcharge on the invoice. How can this be communicated to customers effectively?
 
 3.  **Policy and Public Relations Approach:**
     * **Lobbying**: Suggest key government bodies or trade associations to engage with in the USA to advocate for a reduction or exemption of the tariff.
@@ -764,19 +772,20 @@ Please format the response as a professional business memo using clear headings 
         )
 
         # 3. Run the analysis
-    if st.button("📈 Generate Market Strategy Report"):
-        if not company_name or not car_model or not tariff_rate:
-            st.warning("Please fill in all the details to generate the report.")
-    else:
-        with st.spinner(f"Analyzing market scenarios for {target_market}..."):
-            chain = LLMChain(llm=llm, prompt=negotiator_prompt)
-            report = chain.run(
-                company_name=company_name,
-                car_model=car_model,
-                target_market=target_market,
-                tariff_rate=tariff_rate,
-                # Corrected variable name below
-                market_data_input=market_data_input,
-            )
-            st.write("### 📈 Trade Strategy Report:")
-            st.markdown(report)
+        if st.button("📈 Generate Market Strategy Report"):
+            if not company_name or not car_model or not tariff_rate:
+                st.warning("Please fill in all the details to generate the report.")
+            else:
+                with st.spinner(f"Analyzing market scenarios for {target_market}..."):
+                    chain = LLMChain(llm=llm, prompt=negotiator_prompt)
+                    report = chain.run(
+                        company_name=company_name,
+                        car_model=car_model,
+                        target_market=target_market,
+                        tariff_rate=tariff_rate,
+                        base_price=base_price,
+                        market_data_input=market_data_input
+                    )
+                    st.write("### 📈 Trade Strategy Report:")
+                    st.markdown(report)
+
