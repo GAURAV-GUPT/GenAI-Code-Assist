@@ -136,6 +136,36 @@ Please provide the test cases:
     return chain.run(user_stories=user_stories)
 
 
+def generate_code_from_requirements(user_stories, acceptance_criteria, language="Python"):
+    """
+    Generates source code from user stories and acceptance criteria using an LLM.
+    """
+    if not llm:
+        return "LLM is not initialized. Cannot generate code."
+
+    prompt = PromptTemplate.from_template(
+        """
+You are an expert software developer. Your task is to write {language} code that fulfills the requirements outlined in the following user stories and their acceptance criteria.
+The code should be well-structured, efficient, and include comments where necessary.
+
+Here are the user stories:
+{user_stories}
+
+Here is the acceptance criteria:
+{acceptance_criteria}
+
+Please provide the final {language} code:
+"""
+    )
+    chain = LLMChain(llm=llm, prompt=prompt)
+    return chain.run(
+        user_stories=user_stories,
+        acceptance_criteria=acceptance_criteria,
+        language=language,
+    )
+
+
+
 # --- NEW: Automotive Campaigns Agent Functions ---
 def run_market_research_agent(llm, product_data, competitor_data):
     prompt = PromptTemplate.from_template(
@@ -790,4 +820,5 @@ elif step == "16. Automotive Campaigns Creation":
 
         st.balloons()
         st.success("🎉 Campaign workflow completed successfully!")
+
 
