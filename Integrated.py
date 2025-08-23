@@ -896,7 +896,7 @@ elif step == "17. Supplier Negotiation System":
     target_price = st.number_input(
         "Enter your Target Per-Unit Price (£):",
         min_value=1.0,
-        value=550.0,
+        value=1550.0,
         step=10.0,
         format="%.2f"
     )
@@ -958,6 +958,7 @@ elif step == "17. Supplier Negotiation System":
                             st.markdown(negotiation_result)
                         except Exception as e:
                             st.error(f"An error occurred during negotiation: {e}")
+
 
 
 
