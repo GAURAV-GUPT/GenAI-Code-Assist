@@ -164,6 +164,53 @@ Please provide the final {language} code:
         language=language,
     )
 
+# --- Helper functions for Sourcing Agent ---
+def run_supplier_research_agent(llm, part_name):
+    """Identifies top 3 suppliers for a given automotive part."""
+    prompt = PromptTemplate.from_template(
+        """
+You are a Market Research Agent for a major UK automotive company.
+Your task is to identify the top 3 potential suppliers for the following part: **{part_name}**.
+
+For each supplier, provide:
+- A realistic company name.
+- A brief profile (e.g., focus on quality, cost-effectiveness, innovation, location).
+- An estimated per-unit price range in GBP (£).
+
+Format your output clearly in markdown.
+"""
+    )
+    chain = LLMChain(llm=llm, prompt=prompt)
+    return chain.run(part_name=part_name)
+
+def run_negotiation_agent(llm, part_name, supplier_profile, target_price):
+    """Simulates a negotiation between a sourcing manager and a supplier."""
+    prompt = PromptTemplate.from_template(
+        """
+You are a sophisticated negotiation simulation system. You will orchestrate a dialogue between two AI agents:
+- **Agent A (Sourcing Manager):** Represents a large UK automotive firm. Their goal is to secure a per-unit price for **'{part_name}'** at or below their target of **£{target_price}**. They can use leverage points like high-volume orders and long-term partnership potential.
+- **Agent B (Sales Director):** Represents the supplier, whose profile is: {supplier_profile}. Their goal is to get the best possible price while securing the contract.
+
+**Instructions:**
+1.  Generate a realistic, back-and-forth negotiation transcript.
+2.  The dialogue must include an opening offer, at least two rounds of counter-offers, and a final conclusion.
+3.  After the transcript, provide a final summary on a new line.
+
+**Output Format:**
+
+**Negotiation Transcript:**
+* **Sourcing Manager:** [Opening line]
+* **Sales Director:** [Response]
+* ...
+
+**Final Summary:**
+* **Outcome:** [State whether an agreement was reached and at what final price.]
+* **Recommendation:** [Provide a brief recommendation for the Sourcing Manager.]
+"""
+    )
+    chain = LLMChain(llm=llm, prompt=prompt)
+    return chain.run(part_name=part_name, supplier_profile=supplier_profile, target_price=target_price)
+
 
 
 # --- NEW: Automotive Campaigns Agent Functions ---
@@ -220,7 +267,8 @@ step = st.sidebar.radio(
         "13. Auto OEM Market Research",
         "14. SDLC Multi-Agent",
         "15. Trade Negotiator Agent",
-        "16. Automotive Campaigns Creation"
+        "16. Automotive Campaigns Creation",
+        "17. Supplier Negotiation System"
     ],
 )
 
@@ -837,6 +885,80 @@ elif step == "16. Automotive Campaigns Creation":
 
         st.balloons()
         st.success("🎉 Campaign workflow completed successfully!")
+        
+# --- NEW: Supplier Negotiation System ---
+elif step == "17. Supplier Negotiation System":
+    st.subheader("🤝 Supplier Negotiation System")
+    st.markdown("An AI agent system to help Sourcing Managers identify and negotiate with automotive part suppliers.")
+
+    st.subheader("Step 1: Define Sourcing Request")
+    part_name = st.text_input("Enter the Automotive Part Name:", value="G-Series Turbocharger")
+    target_price = st.number_input(
+        "Enter your Target Per-Unit Price (£):",
+        min_value=1.0,
+        value=550.0,
+        step=10.0,
+        format="%.2f"
+    )
+
+    if 'supplier_research_done' not in st.session_state:
+        st.session_state.supplier_research_done = False
+    if 'supplier_options' not in st.session_state:
+        st.session_state.supplier_options = []
+    if 'supplier_profiles' not in st.session_state:
+        st.session_state.supplier_profiles = {}
+
+
+    if st.button("1. 🕵️ Find Top 3 Suppliers"):
+        if not part_name:
+            st.warning("Please enter a part name.")
+        else:
+            with st.spinner("Market Research Agent is identifying top suppliers..."):
+                try:
+                    research_results = run_supplier_research_agent(llm, part_name)
+                    st.session_state.supplier_research_done = True
+                    # A simple parser to extract names for the selectbox
+                    profiles = research_results.split("###") # Assuming this is the separator
+                    supplier_names = []
+                    supplier_profiles_map = {}
+                    for profile in profiles:
+                        if "Supplier" in profile:
+                            name = profile.split("\n")[0].replace("*","").strip()
+                            supplier_names.append(name)
+                            supplier_profiles_map[name] = profile.strip()
+
+                    st.session_state.supplier_options = supplier_names
+                    st.session_state.supplier_profiles = supplier_profiles_map
+                    st.success("Research complete!")
+                    st.markdown(research_results)
+
+                except Exception as e:
+                    st.error(f"An error occurred during market research: {e}")
+
+    if st.session_state.supplier_research_done:
+        st.subheader("Step 2: Select Supplier and Negotiate")
+        if not st.session_state.supplier_options:
+             st.warning("No suppliers found. Please try a different part name.")
+        else:
+            selected_supplier_name = st.selectbox(
+                "Choose a supplier to negotiate with:",
+                options=st.session_state.supplier_options
+            )
+
+            if st.button("2. 💬 Negotiate Price"):
+                if not selected_supplier_name:
+                    st.warning("Please select a supplier.")
+                else:
+                    supplier_profile = st.session_state.supplier_profiles.get(selected_supplier_name, "N/A")
+                    with st.spinner(f"Negotiation Agent is engaging with {selected_supplier_name}..."):
+                        try:
+                            negotiation_result = run_negotiation_agent(llm, part_name, supplier_profile, target_price)
+                            st.markdown("---")
+                            st.subheader("Negotiation Outcome")
+                            st.markdown(negotiation_result)
+                        except Exception as e:
+                            st.error(f"An error occurred during negotiation: {e}")
+
 
 
 
