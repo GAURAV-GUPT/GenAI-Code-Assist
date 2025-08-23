@@ -648,7 +648,24 @@ elif step == "14. SDLC Multi-Agent":
                 except Exception as e:
                     st.error(f"❌ Error generating acceptance criteria: {e}")
                     st.stop()
-            with st.spinner("4️⃣ Agent 4: Generating test cases..."):
+
+            with st.spinner("4️⃣ Agent 4: Writing the final code..."):
+                try:
+                    final_code = generate_code_from_requirements(user_stories, acceptance_criteria)
+                    st.success("✅ Final code generated.")
+                    st.subheader("💻 Generated Code:")
+                    st.code(final_code, language="python")
+                    st.download_button(
+                        label="⬇️ Download Code",
+                        data=final_code,
+                        file_name="generated_code.py",
+                        mime="text/plain",
+                    )
+                except Exception as e:
+                    st.error(f"❌ Error generating final code: {e}")
+                    st.stop()
+
+            with st.spinner("5️⃣ Agent 5: Generating test cases..."):
                 try:
                     test_cases = user_stories_to_test_cases(user_stories)
                     st.success("✅ Test cases generated.")
@@ -665,7 +682,7 @@ elif step == "14. SDLC Multi-Agent":
                     st.stop()
             st.balloons()
             st.success("🎉 SDLC Multi-Agent workflow completed successfully!")
-
+            
 elif step == "15. Trade Negotiator Agent":
     st.subheader("🌐 Trade Negotiator Agent")
     st.markdown("Analyze global tariff scenarios to find the best market entry strategy for UK-based car exports.")
@@ -820,5 +837,6 @@ elif step == "16. Automotive Campaigns Creation":
 
         st.balloons()
         st.success("🎉 Campaign workflow completed successfully!")
+
 
 
