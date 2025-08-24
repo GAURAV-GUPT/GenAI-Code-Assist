@@ -247,6 +247,38 @@ def run_execution_agent(llm, digital_assets):
     chain = LLMChain(llm=llm, prompt=prompt)
     return chain.run(digital_assets=digital_assets)
 
+# --- NEW: Car Life-Style Configurator Agent Function ---
+def run_car_configurator_agent(llm, user_needs):
+    """Acts as a car salesperson to recommend vehicles based on lifestyle needs."""
+    prompt = PromptTemplate.from_template(
+        """
+You are an expert, friendly, and helpful car salesperson in the UK.
+Your customer has described their needs in natural language. Your task is to analyze their requirements and recommend the best car options.
+
+**Customer's Needs:** "{user_needs}"
+
+**Your Instructions:**
+1.  **Analyze Needs:** Break down the customer's request into key features (e.g., number of seats, terrain suitability, cargo space, fuel type, budget hints).
+2.  **Suggest 1-3 Cars:** Based on the analysis, recommend 1 to 3 specific car models and trims that are currently available in the UK market.
+3.  **Provide Details:** For each recommendation, provide:
+    - A brief, engaging paragraph explaining why this car is a great fit for the customer's lifestyle.
+    - A direct, realistic-looking web link to the car's official UK page (e.g., `https://www.landrover.co.uk/...`).
+4.  **Create Comparison Table:** If you recommend more than one car, generate a comparison table in markdown format. The table should include the following rows:
+    - **Model**
+    - **Starting Price (Est. GBP)**
+    - **Best For** (e.g., "Off-road capability & luxury")
+    - **Safety Rating (NCAP)**
+    - **Fuel Efficiency (MPG)**
+    - **Cargo Space (Litres)**
+    - **Key Feature for Customer** (Highlight one specific feature that matches their need, e.g., "Large boot for a dog crate").
+5.  **Closing Statement:** End with a friendly closing remark, like "Let me know if you'd like to explore any of these options further!".
+
+**Now, generate the response for the actual customer's needs.**
+"""
+    )
+    chain = LLMChain(llm=llm, prompt=prompt)
+    return chain.run(user_needs=user_needs)
+
 
 # --- Streamlit UI and Logic ---
 step = st.sidebar.radio(
@@ -268,7 +300,8 @@ step = st.sidebar.radio(
         "14. SDLC Multi-Agent",
         "15. Trade Negotiator Agent",
         "16. Automotive Campaigns Creation",
-        "17. Supplier Negotiation System"
+        "17. Supplier Negotiation System",
+        "18. Car Life-Style Configurator" # New agent added here
     ],
 )
 
@@ -959,6 +992,27 @@ elif step == "17. Supplier Negotiation System":
                         except Exception as e:
                             st.error(f"An error occurred during negotiation: {e}")
 
+# --- NEW: Car Life-Style Configurator Agent ---
+elif step == "18. Car Life-Style Configurator":
+    st.subheader("🚗 Car Life-Style Configurator")
+    st.markdown("Describe your dream car and lifestyle, and our AI salesperson will find the perfect match for you!")
+
+    user_needs = st.text_area(
+        "Tell us what you're looking for in a car. For example: 'I need a family car for long drives on mountains with a space for my dog'",
+        height=150,
+        placeholder="e.g., I'm looking for a sporty two-seater for weekend drives in the countryside, but it should also be reliable for daily commuting."
+    )
+
+    if llm and st.button("🤖 Find My Car"):
+        if not user_needs:
+            st.warning("Please describe your needs to get a recommendation.")
+        else:
+            with st.spinner("Our AI salesperson is searching for the perfect car for you..."):
+                try:
+                    car_recommendations = run_car_configurator_agent(llm, user_needs)
+                    st.markdown(car_recommendations)
+                except Exception as e:
+                    st.error(f"❌ An error occurred while generating recommendations: {e}")
 
 
 
