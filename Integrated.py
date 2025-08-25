@@ -387,7 +387,7 @@ step = st.sidebar.radio(
         "16. Automotive Campaigns Creation",
         "17. Supplier Negotiation System",
         "18. Car Life-Style Configurator",
-        "19. Accounts Receivable Agent",  # New agent added here
+        "19. Accounts Receivable Agent"  # New agent added here
     ],
 )
 
@@ -1215,3 +1215,4 @@ elif step == "19. Accounts Receivable Agent":
                 st.success("✅ Autonomous workflow complete. Final response is ready.")
                 st.subheader("Generated Email Response:")
                 st.markdown(final_response)
+
