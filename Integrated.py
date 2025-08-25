@@ -21,7 +21,9 @@ os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 # --- Initial App Setup ---
 st.set_page_config(page_title="AI Assistant", layout="wide")
 st.title("🧠 **AI - Assistant**")
-st.markdown("A multi-agent AI assistant for various tasks, from ticket analysis to remote diagnostics.")
+st.markdown(
+    "A multi-agent AI assistant for various tasks, from ticket analysis to remote diagnostics."
+)
 
 # Initialize the OpenAI LLM and Client
 try:
@@ -66,6 +68,7 @@ Translated Code:
         return response.choices[0].message.content
     except Exception as e:
         return f"❌ An error occurred during translation: {e}"
+
 
 # --- Helper functions for SDLC Agents ---
 def brd_to_user_stories(brd_content):
@@ -136,7 +139,9 @@ Please provide the test cases:
     return chain.run(user_stories=user_stories)
 
 
-def generate_code_from_requirements(user_stories, acceptance_criteria, language="Python"):
+def generate_code_from_requirements(
+    user_stories, acceptance_criteria, language="Python"
+):
     """
     Generates source code from user stories and acceptance criteria using an LLM.
     """
@@ -164,6 +169,7 @@ Please provide the final {language} code:
         language=language,
     )
 
+
 # --- Helper functions for Sourcing Agent ---
 def run_supplier_research_agent(llm, part_name):
     """Identifies top 3 suppliers for a given automotive part."""
@@ -182,6 +188,7 @@ Format your output clearly in markdown.
     )
     chain = LLMChain(llm=llm, prompt=prompt)
     return chain.run(part_name=part_name)
+
 
 def run_negotiation_agent(llm, part_name, supplier_profile, target_price):
     """Simulates a negotiation between a sourcing manager and a supplier."""
@@ -209,8 +216,11 @@ You are a sophisticated negotiation simulation system. You will orchestrate a di
 """
     )
     chain = LLMChain(llm=llm, prompt=prompt)
-    return chain.run(part_name=part_name, supplier_profile=supplier_profile, target_price=target_price)
-
+    return chain.run(
+        part_name=part_name,
+        supplier_profile=supplier_profile,
+        target_price=target_price,
+    )
 
 
 # --- NEW: Automotive Campaigns Agent Functions ---
@@ -223,6 +233,7 @@ def run_market_research_agent(llm, product_data, competitor_data):
     chain = LLMChain(llm=llm, prompt=prompt)
     return chain.run(product_data=product_data, competitor_data=competitor_data)
 
+
 def run_creative_agent(llm, strategic_brief):
     prompt = PromptTemplate.from_template(
         """You are a creative director. Based on this strategic brief, develop a creative concept for an automotive campaign. The concept should include a core message, a campaign slogan, and key visual ideas.
@@ -230,6 +241,7 @@ def run_creative_agent(llm, strategic_brief):
     )
     chain = LLMChain(llm=llm, prompt=prompt)
     return chain.run(strategic_brief=strategic_brief)
+
 
 def run_content_agent(llm, creative_concept):
     prompt = PromptTemplate.from_template(
@@ -239,6 +251,7 @@ def run_content_agent(llm, creative_concept):
     chain = LLMChain(llm=llm, prompt=prompt)
     return chain.run(creative_concept=creative_concept)
 
+
 def run_execution_agent(llm, digital_assets):
     prompt = PromptTemplate.from_template(
         """You are a front-end developer. Generate a simple HTML and CSS code for a landing page based on the following digital assets. The page should include a hero section with the slogan, and a simple lead capture form (name, email).
@@ -246,6 +259,7 @@ def run_execution_agent(llm, digital_assets):
     )
     chain = LLMChain(llm=llm, prompt=prompt)
     return chain.run(digital_assets=digital_assets)
+
 
 # --- NEW: Car Life-Style Configurator Agent Function ---
 def run_car_configurator_agent(llm, user_needs):
@@ -279,6 +293,7 @@ Your customer has described their needs in natural language. Your task is to ana
     chain = LLMChain(llm=llm, prompt=prompt)
     return chain.run(user_needs=user_needs)
 
+
 # --- NEW: Accounts Receivable Agent Functions ---
 def run_query_categorization_agent(llm, query):
     """Categorizes the supplier query."""
@@ -302,6 +317,7 @@ Category:
     chain = LLMChain(llm=llm, prompt=prompt)
     return chain.run(query=query).strip()
 
+
 def run_summarization_agent(llm, query):
     """Summarizes the supplier query."""
     prompt = PromptTemplate.from_template(
@@ -319,6 +335,7 @@ Summary:
     )
     chain = LLMChain(llm=llm, prompt=prompt)
     return chain.run(query=query).strip()
+
 
 def run_draft_response_agent(llm, category, summary, query, sap_data):
     """Drafts a response to the supplier using SAP data."""
@@ -347,6 +364,7 @@ Be polite, concise, and directly address the supplier's question.
     chain = LLMChain(llm=llm, prompt=prompt)
     return chain.run(category=category, summary=summary, query=query, sap_data=sap_data)
 
+
 # --- Streamlit UI and Logic ---
 step = st.sidebar.radio(
     "**Available Agents:**",
@@ -369,7 +387,7 @@ step = st.sidebar.radio(
         "16. Automotive Campaigns Creation",
         "17. Supplier Negotiation System",
         "18. Car Life-Style Configurator",
-        "19. Accounts Receivable - AI Agent" # New agent added here
+        "19. Accounts Receivable Agent",  # New agent added here
     ],
 )
 
@@ -568,9 +586,13 @@ elif step == "9. App Log Analyser":
 # --- Legacy Code Conversion Block (Fixed) ---
 elif step == "10. Legacy Code Convertor":
     st.title("Legacy Code Translator ⚙️")
-    st.markdown("Use this tool to translate your legacy code (e.g., Cobol, Fortran) into modern languages.")
+    st.markdown(
+        "Use this tool to translate your legacy code (e.g., Cobol, Fortran) into modern languages."
+    )
     if not openai_initialized:
-        st.warning("⚠️ OpenAI client is not initialized. Please set your OPENAI_API_KEY in a `.env` file.")
+        st.warning(
+            "⚠️ OpenAI client is not initialized. Please set your OPENAI_API_KEY in a `.env` file."
+        )
     else:
         st.subheader("1. Select Target Language")
         target_language = st.selectbox(
@@ -597,8 +619,12 @@ PROCEDURE DIVISION.
             if not source_code:
                 st.warning("Please enter some source code to translate.")
             else:
-                with st.spinner(f"🤖 AI is translating your code to {target_language}..."):
-                    translated_code = translate_code_with_openai(openai_client, source_code, target_language)
+                with st.spinner(
+                    f"🤖 AI is translating your code to {target_language}..."
+                ):
+                    translated_code = translate_code_with_openai(
+                        openai_client, source_code, target_language
+                    )
                 st.subheader(f"✅ Translated {target_language} Code")
                 if "Python" in target_language:
                     st.code(translated_code, language="python")
@@ -610,8 +636,11 @@ PROCEDURE DIVISION.
 # --- Predictive Maintenance Agent ---
 elif step == "11. Equipment Predictive Maintenance":
     st.subheader("🏭 Predictive Maintenance Agent for Factory Floor")
-    st.markdown("Upload sensor data from factory machinery to predict potential failures.")
-    st.info("""
+    st.markdown(
+        "Upload sensor data from factory machinery to predict potential failures."
+    )
+    st.info(
+        """
     **Data Format Guide:**
     Please upload a CSV file with the following columns:
     - `timestamp`: The date and time of the reading.
@@ -620,7 +649,8 @@ elif step == "11. Equipment Predictive Maintenance":
     - `temperature_c`: Temperature in Celsius.
     - `power_kw`: Power consumption in Kilowatts.
     - `error_code`: Any error code reported by the machine (0 if none).
-    """)
+    """
+    )
     uploaded_file = st.file_uploader("Upload your sensor data (CSV)", type="csv")
     if uploaded_file is not None and llm:
         try:
@@ -658,7 +688,9 @@ Your task is to analyze the following real-time sensor data from our machinery a
 # --- NEW: Remote Diagnostics & Service Booking Agent ---
 elif step == "12. Car Remote Diagnostics":
     st.subheader("📡 Remote Diagnostics & Service Booking Agent")
-    st.markdown("Analyze vehicle Diagnostic Trouble Codes (DTCs) to streamline the service process.")
+    st.markdown(
+        "Analyze vehicle Diagnostic Trouble Codes (DTCs) to streamline the service process."
+    )
     dtc_code = st.text_input("Enter the Diagnostic Trouble Code (DTC)", value="P0101")
     vehicle_model = st.selectbox(
         "Select Vehicle Model",
@@ -703,7 +735,9 @@ You are an expert Automotive Remote Diagnostics AI Agent. Your goal is to analyz
 
 elif step == "13. Auto OEM Market Research":
     st.subheader("🚗🆚🚙 Auto OEM Market Research")
-    st.markdown("Compare different car trims from leading brands based on features, cost, and customer reviews.")
+    st.markdown(
+        "Compare different car trims from leading brands based on features, cost, and customer reviews."
+    )
     car_trims = [
         "BMW - 3 Series Sedan",
         "BMW - X5 SUV",
@@ -759,7 +793,9 @@ elif step == "14. SDLC Multi-Agent":
             brd_content = brd_file.read().decode("utf-8")
             st.success("✅ BRD document uploaded and read successfully.")
         else:
-            st.warning("⚠️ Only plain text (.txt) files are supported at this time for direct reading.")
+            st.warning(
+                "⚠️ Only plain text (.txt) files are supported at this time for direct reading."
+            )
     if st.button("▶️ Run SDLC Agents"):
         if not brd_content:
             st.error("Please upload a BRD document to start the workflow.")
@@ -784,7 +820,9 @@ elif step == "14. SDLC Multi-Agent":
                     st.stop()
             with st.spinner("3️⃣ Agent 3: Generating acceptance criteria..."):
                 try:
-                    acceptance_criteria = user_stories_to_acceptance_criteria(user_stories)
+                    acceptance_criteria = user_stories_to_acceptance_criteria(
+                        user_stories
+                    )
                     st.success("✅ Acceptance criteria generated.")
                     st.subheader("📋 Generated Acceptance Criteria:")
                     st.markdown(acceptance_criteria)
@@ -800,7 +838,9 @@ elif step == "14. SDLC Multi-Agent":
 
             with st.spinner("4️⃣ Agent 4: Writing the final code..."):
                 try:
-                    final_code = generate_code_from_requirements(user_stories, acceptance_criteria)
+                    final_code = generate_code_from_requirements(
+                        user_stories, acceptance_criteria
+                    )
                     st.success("✅ Final code generated.")
                     st.subheader("💻 Generated Code:")
                     st.code(final_code, language="python")
@@ -831,10 +871,12 @@ elif step == "14. SDLC Multi-Agent":
                     st.stop()
             st.balloons()
             st.success("🎉 SDLC Multi-Agent workflow completed successfully!")
-            
+
 elif step == "15. Trade Negotiator Agent":
     st.subheader("🌐 Trade Negotiator Agent")
-    st.markdown("Analyze global tariff scenarios to find the best market entry strategy for UK-based car exports.")
+    st.markdown(
+        "Analyze global tariff scenarios to find the best market entry strategy for UK-based car exports."
+    )
     company_name = st.text_input("Enter your company name:", value="UK Auto Co.")
     car_model = st.text_input("Enter the car model to export:", value="Velar")
     target_market = st.selectbox(
@@ -846,8 +888,8 @@ elif step == "15. Trade Negotiator Agent":
             "Australia",
             "China",
             "Japan",
-            "Brazil"
-        )
+            "Brazil",
+        ),
     )
     tariff_rate = st.number_input(
         "Enter the current tariff rate for this market (in %):",
@@ -855,20 +897,20 @@ elif step == "15. Trade Negotiator Agent":
         max_value=100.0,
         value=2.5,
         step=0.1,
-        format="%.1f"
+        format="%.1f",
     )
     base_price = st.number_input(
         "Enter the base price of the car (in £):",
         min_value=10000.0,
         value=50000.0,
         step=1000.0,
-        format="%.2f"
+        format="%.2f",
     )
     market_data_input = st.text_area(
         "Provide any other relevant market data (regulations, demand trends, etc.):",
         value="""- Inflation Reduction Act (IRA) impact on EV tax credits.
 - Strong demand for SUVs.
-- High environmental standards."""
+- High environmental standards.""",
     )
     if llm:
         negotiator_prompt = PromptTemplate.from_template(
@@ -911,7 +953,7 @@ Please format the response as a clear, professional recommendation report with d
                         target_market=target_market,
                         tariff_rate=tariff_rate,
                         base_price=base_price,
-                        market_data_input=market_data_input
+                        market_data_input=market_data_input,
                     )
                     st.write("### 📈 Trade Strategy Report:")
                     st.markdown(report)
@@ -926,24 +968,26 @@ elif step == "16. Automotive Campaigns Creation":
     st.markdown("### 1. Provide Campaign Information")
     product_data = st.text_area(
         "Enter key vehicle features, price, and target buyer profile:",
-        key="campaign_product_data"
+        key="campaign_product_data",
     )
     competitor_data = st.text_area(
         "Enter key competitor details and market positioning:",
-        key="campaign_competitor_data"
+        key="campaign_competitor_data",
     )
 
     if st.button("▶️ Run Full Campaign Workflow"):
         if not product_data or not competitor_data:
             st.error("Please provide both product and competitor data to start.")
             st.stop()
-        
+
         st.info("Starting the multi-agent campaign workflow...")
 
         # Agent 1: Market Research Agent
         with st.spinner("1/4: Analyzing market and generating strategy brief..."):
             try:
-                market_brief = run_market_research_agent(llm, product_data, competitor_data)
+                market_brief = run_market_research_agent(
+                    llm, product_data, competitor_data
+                )
                 st.success("✅ Strategy brief generated.")
                 st.markdown("### 📈 Strategic Brief")
                 st.write(market_brief)
@@ -986,29 +1030,32 @@ elif step == "16. Automotive Campaigns Creation":
 
         st.balloons()
         st.success("🎉 Campaign workflow completed successfully!")
-        
+
 # --- NEW: Supplier Negotiation System ---
 elif step == "17. Supplier Negotiation System":
     st.subheader("🤝 Supplier Negotiation System")
-    st.markdown("An AI agent system to help Sourcing Managers identify and negotiate with automotive part suppliers.")
+    st.markdown(
+        "An AI agent system to help Sourcing Managers identify and negotiate with automotive part suppliers."
+    )
 
     st.subheader("Step 1: Define Sourcing Request")
-    part_name = st.text_input("Enter the Automotive Part Name:", value="G-Series Turbocharger")
+    part_name = st.text_input(
+        "Enter the Automotive Part Name:", value="G-Series Turbocharger"
+    )
     target_price = st.number_input(
         "Enter your Target Per-Unit Price (£):",
         min_value=1.0,
         value=1550.0,
         step=10.0,
-        format="%.2f"
+        format="%.2f",
     )
 
-    if 'supplier_research_done' not in st.session_state:
+    if "supplier_research_done" not in st.session_state:
         st.session_state.supplier_research_done = False
-    if 'supplier_options' not in st.session_state:
+    if "supplier_options" not in st.session_state:
         st.session_state.supplier_options = []
-    if 'supplier_profiles' not in st.session_state:
+    if "supplier_profiles" not in st.session_state:
         st.session_state.supplier_profiles = {}
-
 
     if st.button("1. 🕵️ Find Top 3 Suppliers"):
         if not part_name:
@@ -1019,12 +1066,14 @@ elif step == "17. Supplier Negotiation System":
                     research_results = run_supplier_research_agent(llm, part_name)
                     st.session_state.supplier_research_done = True
                     # A simple parser to extract names for the selectbox
-                    profiles = research_results.split("###") # Assuming this is the separator
+                    profiles = research_results.split(
+                        "###"
+                    )  # Assuming this is the separator
                     supplier_names = []
                     supplier_profiles_map = {}
                     for profile in profiles:
                         if "Supplier" in profile:
-                            name = profile.split("\n")[0].replace("*","").strip()
+                            name = profile.split("\n")[0].replace("*", "").strip()
                             supplier_names.append(name)
                             supplier_profiles_map[name] = profile.strip()
 
@@ -1039,21 +1088,27 @@ elif step == "17. Supplier Negotiation System":
     if st.session_state.supplier_research_done:
         st.subheader("Step 2: Select Supplier and Negotiate")
         if not st.session_state.supplier_options:
-             st.warning("No suppliers found. Please try a different part name.")
+            st.warning("No suppliers found. Please try a different part name.")
         else:
             selected_supplier_name = st.selectbox(
                 "Choose a supplier to negotiate with:",
-                options=st.session_state.supplier_options
+                options=st.session_state.supplier_options,
             )
 
             if st.button("2. 💬 Negotiate Price"):
                 if not selected_supplier_name:
                     st.warning("Please select a supplier.")
                 else:
-                    supplier_profile = st.session_state.supplier_profiles.get(selected_supplier_name, "N/A")
-                    with st.spinner(f"Negotiation Agent is engaging with {selected_supplier_name}..."):
+                    supplier_profile = st.session_state.supplier_profiles.get(
+                        selected_supplier_name, "N/A"
+                    )
+                    with st.spinner(
+                        f"Negotiation Agent is engaging with {selected_supplier_name}..."
+                    ):
                         try:
-                            negotiation_result = run_negotiation_agent(llm, part_name, supplier_profile, target_price)
+                            negotiation_result = run_negotiation_agent(
+                                llm, part_name, supplier_profile, target_price
+                            )
                             st.markdown("---")
                             st.subheader("Negotiation Outcome")
                             st.markdown(negotiation_result)
@@ -1063,37 +1118,57 @@ elif step == "17. Supplier Negotiation System":
 # --- NEW: Car Life-Style Configurator Agent ---
 elif step == "18. Car Life-Style Configurator":
     st.subheader("🚗 Car Life-Style Configurator")
-    st.markdown("Describe your dream car and lifestyle, and our AI salesperson will find the perfect match for you!")
+    st.markdown(
+        "Describe your dream car and lifestyle, and our AI salesperson will find the perfect match for you!"
+    )
 
     user_needs = st.text_area(
         "Tell us what you're looking for in a car. For example: 'I need a family car for long drives on mountains with a space for my dog'",
         height=150,
-        placeholder="e.g., I'm looking for a sporty two-seater for weekend drives in the countryside, but it should also be reliable for daily commuting."
+        placeholder="e.g., I'm looking for a sporty two-seater for weekend drives in the countryside, but it should also be reliable for daily commuting.",
     )
 
     if llm and st.button("🤖 Find My Car"):
         if not user_needs:
             st.warning("Please describe your needs to get a recommendation.")
         else:
-            with st.spinner("Our AI salesperson is searching for the perfect car for you..."):
+            with st.spinner(
+                "Our AI salesperson is searching for the perfect car for you..."
+            ):
                 try:
                     car_recommendations = run_car_configurator_agent(llm, user_needs)
                     st.markdown(car_recommendations)
                 except Exception as e:
-                    st.error(f"❌ An error occurred while generating recommendations: {e}")
+                    st.error(
+                        f"❌ An error occurred while generating recommendations: {e}"
+                    )
 
 # --- NEW: Accounts Receivable - AI Agent ---
-elif step == "19. Accounts Receivable - AI Agent":
+elif step == "19. Accounts Receivable Agent":
     st.subheader("🧾 Accounts Receivable - AI Agent")
-    st.markdown("An autonomous agent to respond to supplier queries by analyzing the query and checking internal financial data.")
+    st.markdown(
+        "An autonomous agent to respond to supplier queries by analyzing the query and checking internal financial data."
+    )
 
     # Create and display dummy SAP data
     dummy_sap_data = {
-        'invoice_id': ['INV-001', 'INV-002', 'INV-003', 'INV-004', 'INV-005'],
-        'supplier_name': ['Stark Industries', 'Wayne Enterprises', 'Cyberdyne Systems', 'Stark Industries', 'Oscorp'],
-        'amount': [5000.00, 12500.50, 7800.00, 2300.75, 999.99],
-        'due_date': ['2025-08-15', '2025-08-20', '2025-09-01', '2025-09-10', '2025-08-25'],
-        'status': ['Paid', 'Paid', 'Pending', 'Overdue', 'Pending']
+        "invoice_id": ["INV-001", "INV-002", "INV-003", "INV-004", "INV-005"],
+        "supplier_name": [
+            "Stark Industries",
+            "Wayne Enterprises",
+            "Cyberdyne Systems",
+            "Stark Industries",
+            "Oscorp",
+        ],
+        "amount": [5000.00, 12500.50, 7800.00, 2300.75, 999.99],
+        "due_date": [
+            "2025-08-15",
+            "2025-08-20",
+            "2025-09-01",
+            "2025-09-10",
+            "2025-08-25",
+        ],
+        "status": ["Paid", "Paid", "Pending", "Overdue", "Pending"],
     }
     df_sap = pd.DataFrame(dummy_sap_data)
     with st.expander("View Dummy SAP Accounts Payable Data"):
@@ -1103,7 +1178,7 @@ elif step == "19. Accounts Receivable - AI Agent":
     supplier_query = st.text_area(
         "Enter the supplier query text here:",
         height=150,
-        placeholder="e.g., To whom it may concern, We are following up on invoice INV-004 for £2300.75. Our records show this is now past its due date. Could you please provide an update on the payment status? Regards, Pepper Potts, Stark Industries."
+        placeholder="e.g., To whom it may concern, We are following up on invoice INV-004 for £2300.75. Our records show this is now past its due date. Could you please provide an update on the payment status? Regards, Pepper Potts, Stark Industries.",
     )
 
     if st.button("🤖 Process Query and Generate Response"):
@@ -1114,22 +1189,28 @@ elif step == "19. Accounts Receivable - AI Agent":
         else:
             with st.spinner("Autonomous agent is processing the query..."):
                 st.write("---")
-                
+
                 # 1. Query Categorization Agent
-                st.info("Step 1: Query Categorization Agent is analyzing the request...")
+                st.info(
+                    "Step 1: Query Categorization Agent is analyzing the request..."
+                )
                 category = run_query_categorization_agent(llm, supplier_query)
                 st.write(f"**Detected Category:** {category}")
-                
+
                 # 2. Summarization Agent
                 st.info("Step 2: Summarization Agent is creating a context summary...")
                 summary = run_summarization_agent(llm, supplier_query)
                 st.write(f"**Query Summary:** {summary}")
-                
+
                 # 3. Draft Response Generation Agent
-                st.info("Step 3: Draft Response Agent is pulling data and composing a reply...")
+                st.info(
+                    "Step 3: Draft Response Agent is pulling data and composing a reply..."
+                )
                 sap_data_string = df_sap.to_string()
-                final_response = run_draft_response_agent(llm, category, summary, supplier_query, sap_data_string)
-                
+                final_response = run_draft_response_agent(
+                    llm, category, summary, supplier_query, sap_data_string
+                )
+
                 st.write("---")
                 st.success("✅ Autonomous workflow complete. Final response is ready.")
                 st.subheader("Generated Email Response:")
