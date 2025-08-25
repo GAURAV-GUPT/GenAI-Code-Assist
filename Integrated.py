@@ -1,4 +1,4 @@
-# Full GenAI Developer Assistant (Steps 1 to 19 Integrated)
+# Full GenAI Developer Assistant (Steps 1 to 16 Integrated)
 import os
 import streamlit as st
 import pandas as pd
@@ -279,7 +279,6 @@ Your customer has described their needs in natural language. Your task is to ana
     chain = LLMChain(llm=llm, prompt=prompt)
     return chain.run(user_needs=user_needs)
 
-
 # --- NEW: Accounts Receivable Agent Functions ---
 def run_query_categorization_agent(llm, query):
     """Categorizes the supplier query."""
@@ -348,7 +347,6 @@ Be polite, concise, and directly address the supplier's question.
     chain = LLMChain(llm=llm, prompt=prompt)
     return chain.run(category=category, summary=summary, query=query, sap_data=sap_data)
 
-
 # --- Streamlit UI and Logic ---
 step = st.sidebar.radio(
     "**Available Agents:**",
@@ -371,7 +369,7 @@ step = st.sidebar.radio(
         "16. Automotive Campaigns Creation",
         "17. Supplier Negotiation System",
         "18. Car Life-Style Configurator",
-        "19. Accounts Receivable - AI Agent" # New agent added
+        "19. Accounts Receivable - AI Agent" # New agent added here
     ],
 )
 
@@ -769,73 +767,320 @@ elif step == "14. SDLC Multi-Agent":
             st.error("LLM is not initialized. Please check your API key.")
         else:
             st.info("Starting the multi-agent SDLC workflow...")
-            with st.expander("Step 2: User Story Generation", expanded=False):
-                with st.spinner("Generating user stories..."):
+            with st.spinner("2️⃣ Agent 2: Creating user stories from BRD..."):
+                try:
                     user_stories = brd_to_user_stories(brd_content)
-                    st.markdown(user_stories)
-            with st.expander("Step 3: Acceptance Criteria Generation", expanded=False):
-                with st.spinner("Generating acceptance criteria..."):
+                    st.success("✅ User stories generated.")
+                    st.subheader("📝 Generated User Stories:")
+                    st.write(user_stories)
+                    st.download_button(
+                        label="⬇️ Download User Stories",
+                        data=user_stories,
+                        file_name="user_stories.txt",
+                        mime="text/plain",
+                    )
+                except Exception as e:
+                    st.error(f"❌ Error generating user stories: {e}")
+                    st.stop()
+            with st.spinner("3️⃣ Agent 3: Generating acceptance criteria..."):
+                try:
                     acceptance_criteria = user_stories_to_acceptance_criteria(user_stories)
+                    st.success("✅ Acceptance criteria generated.")
+                    st.subheader("📋 Generated Acceptance Criteria:")
                     st.markdown(acceptance_criteria)
-            with st.expander("Step 4: Test Case Generation", expanded=False):
-                with st.spinner("Generating test cases..."):
+                    st.download_button(
+                        label="⬇️ Download Acceptance Criteria",
+                        data=acceptance_criteria,
+                        file_name="acceptance_criteria.txt",
+                        mime="text/plain",
+                    )
+                except Exception as e:
+                    st.error(f"❌ Error generating acceptance criteria: {e}")
+                    st.stop()
+
+            with st.spinner("4️⃣ Agent 4: Writing the final code..."):
+                try:
+                    final_code = generate_code_from_requirements(user_stories, acceptance_criteria)
+                    st.success("✅ Final code generated.")
+                    st.subheader("💻 Generated Code:")
+                    st.code(final_code, language="python")
+                    st.download_button(
+                        label="⬇️ Download Code",
+                        data=final_code,
+                        file_name="generated_code.py",
+                        mime="text/plain",
+                    )
+                except Exception as e:
+                    st.error(f"❌ Error generating final code: {e}")
+                    st.stop()
+
+            with st.spinner("5️⃣ Agent 5: Generating test cases..."):
+                try:
                     test_cases = user_stories_to_test_cases(user_stories)
+                    st.success("✅ Test cases generated.")
+                    st.subheader("📋 Generated Test Cases:")
                     st.markdown(test_cases)
-            with st.expander("Step 5: Code Generation (Python)", expanded=False):
-                with st.spinner("Generating Python code..."):
-                    generated_code = generate_code_from_requirements(user_stories, acceptance_criteria)
-                    st.code(generated_code, language="python")
-                    st.session_state.generated_code = generated_code # Save for validation/commit
-            st.success("✅ SDLC Multi-Agent workflow completed!")
+                    st.download_button(
+                        label="⬇️ Download Test Cases",
+                        data=test_cases,
+                        file_name="test_cases.txt",
+                        mime="text/plain",
+                    )
+                except Exception as e:
+                    st.error(f"❌ Error generating test cases: {e}")
+                    st.stop()
+            st.balloons()
+            st.success("🎉 SDLC Multi-Agent workflow completed successfully!")
             
+elif step == "15. Trade Negotiator Agent":
+    st.subheader("🌐 Trade Negotiator Agent")
+    st.markdown("Analyze global tariff scenarios to find the best market entry strategy for UK-based car exports.")
+    company_name = st.text_input("Enter your company name:", value="UK Auto Co.")
+    car_model = st.text_input("Enter the car model to export:", value="Velar")
+    target_market = st.selectbox(
+        "Select Target Market:",
+        (
+            "USA",
+            "Canada",
+            "European Union (EU)",
+            "Australia",
+            "China",
+            "Japan",
+            "Brazil"
+        )
+    )
+    tariff_rate = st.number_input(
+        "Enter the current tariff rate for this market (in %):",
+        min_value=0.0,
+        max_value=100.0,
+        value=2.5,
+        step=0.1,
+        format="%.1f"
+    )
+    base_price = st.number_input(
+        "Enter the base price of the car (in £):",
+        min_value=10000.0,
+        value=50000.0,
+        step=1000.0,
+        format="%.2f"
+    )
+    market_data_input = st.text_area(
+        "Provide any other relevant market data (regulations, demand trends, etc.):",
+        value="""- Inflation Reduction Act (IRA) impact on EV tax credits.
+- Strong demand for SUVs.
+- High environmental standards."""
+    )
+    if llm:
+        negotiator_prompt = PromptTemplate.from_template(
+            """
+You are an expert International Trade Negotiator and Market Analyst. Your task is to draft a strategic market entry and mitigation plan for a UK automotive company, {company_name}, exporting its {car_model} to the {target_market}.
+**Current Situation Analysis:**
+- **Product:** {car_model} (a luxury car, manufactured in the UK).
+- **Target Market:** {target_market}
+- **Tariff Details:** The current tariff on this vehicle is {tariff_rate}% under the existing trade agreement.
+- **Market Data:**
+{market_data_input}
+- **Pricing Data:** The base price of the car is £{base_price}.
+---
+### **Strategic Recommendations:**
+1.  **Tariff Circumvention/Mitigation:** Identify and analyze potential strategies to legally minimize or avoid the {tariff_rate}% tax. Consider the viability of the following:
+    * **Rules of Origin**: Can we leverage components or manufacturing processes from countries with more favorable trade agreements to lower the effective tariff?
+    * **FTAs**: Are there any existing or potential Free Trade Agreements (e.g., UK-USA) that could be leveraged?
+    * **Reclassification**: Is it possible to reclassify the vehicle or its components to a lower-tariff category?
+    * **In-country Investment**: What are the pros and cons of establishing a local assembly or finishing plant in the USA to qualify for domestic status or government incentives (e.g., Inflation Reduction Act benefits)?
+2.  **Financial and Pricing Strategy:**
+    * **Cost-Benefit Analysis**: Provide a high-level calculation showing the financial impact of the tariff on a single car with a base price of £{base_price}. Calculate the total landed cost with the tariff, and compare this to a scenario with a hypothetical 0% tariff.
+    * **Pricing Models**: Analyze the pros and cons of three specific pricing models to address the tariff.
+        1.  **Full Pass-Through**: Analyze the impact of passing the full {tariff_rate}% cost directly to the consumer. What are the risks to sales volume and brand perception?
+        2.  **Cost Absorption**: Analyze the impact of absorbing the full {tariff_rate}% cost to maintain a competitive price. What is the impact on our profit margins?
+        3.  **Hybrid Surcharge**: Analyze the impact of a transparent, separate tariff surcharge on the invoice. How can this be communicated to customers effectively?
+3.  **Policy and Public Relations Approach:**
+    * **Lobbying**: Suggest key government bodies or trade associations to engage with in the USA to advocate for a reduction or exemption of the tariff.
+    * **Public Relations**: Recommend a public messaging strategy that frames our company's position on the tariffs.
+4.  **Overall Commercial Team Briefing**: Summarize the key findings and provide a clear, prioritized list of three to five actionable steps for the commercial team to execute, including a recommended timeline (e.g., Short-term, Mid-term).
+Please format the response as a clear, professional recommendation report with distinct sections. Do NOT use the term "memo".
+"""
+        )
+        if st.button("📈 Generate Market Strategy Report"):
+            if company_name and car_model and tariff_rate:
+                with st.spinner(f"Analyzing market scenarios for {target_market}..."):
+                    chain = LLMChain(llm=llm, prompt=negotiator_prompt)
+                    report = chain.run(
+                        company_name=company_name,
+                        car_model=car_model,
+                        target_market=target_market,
+                        tariff_rate=tariff_rate,
+                        base_price=base_price,
+                        market_data_input=market_data_input
+                    )
+                    st.write("### 📈 Trade Strategy Report:")
+                    st.markdown(report)
+            else:
+                st.warning("Please fill in all the details to generate the report.")
+
+# --- NEW: Automotive Campaigns Creation Agent ---
+elif step == "16. Automotive Campaigns Creation":
+    st.subheader("🚀 Multi Agent Automated Automotive Campaign Creation")
+    st.markdown("Automate the entire campaign process from research to content.")
+
+    st.markdown("### 1. Provide Campaign Information")
+    product_data = st.text_area(
+        "Enter key vehicle features, price, and target buyer profile:",
+        key="campaign_product_data"
+    )
+    competitor_data = st.text_area(
+        "Enter key competitor details and market positioning:",
+        key="campaign_competitor_data"
+    )
+
+    if st.button("▶️ Run Full Campaign Workflow"):
+        if not product_data or not competitor_data:
+            st.error("Please provide both product and competitor data to start.")
+            st.stop()
+        
+        st.info("Starting the multi-agent campaign workflow...")
+
+        # Agent 1: Market Research Agent
+        with st.spinner("1/4: Analyzing market and generating strategy brief..."):
+            try:
+                market_brief = run_market_research_agent(llm, product_data, competitor_data)
+                st.success("✅ Strategy brief generated.")
+                st.markdown("### 📈 Strategic Brief")
+                st.write(market_brief)
+            except Exception as e:
+                st.error(f"❌ Market Research Agent failed: {e}")
+                st.stop()
+
+        # Agent 2: Creative Strategy Agent
+        with st.spinner("2/4: Developing creative concepts and messaging..."):
+            try:
+                creative_concept = run_creative_agent(llm, market_brief)
+                st.success("✅ Creative concept developed.")
+                st.markdown("### 🎨 Creative Concept")
+                st.write(creative_concept)
+            except Exception as e:
+                st.error(f"❌ Creative Agent failed: {e}")
+                st.stop()
+
+        # Agent 3: Content Generation Agent
+        with st.spinner("3/4: Generating ad copy and assets..."):
+            try:
+                digital_assets = run_content_agent(llm, creative_concept)
+                st.success("✅ Digital assets generated.")
+                st.markdown("### ✍️ Generated Content")
+                st.write(digital_assets)
+            except Exception as e:
+                st.error(f"❌ Content Agent failed: {e}")
+                st.stop()
+
+        # Agent 4: Campaign Execution Agent
+        with st.spinner("4/4: Generating deployable code and assets..."):
+            try:
+                deployable_code = run_execution_agent(llm, digital_assets)
+                st.success("✅ Deployable code generated.")
+                st.markdown("### 💻 Deployable Code")
+                st.code(deployable_code, language="html")
+            except Exception as e:
+                st.error(f"❌ Execution Agent failed: {e}")
+                st.stop()
+
+        st.balloons()
+        st.success("🎉 Campaign workflow completed successfully!")
+        
 # --- NEW: Supplier Negotiation System ---
 elif step == "17. Supplier Negotiation System":
     st.subheader("🤝 Supplier Negotiation System")
-    st.markdown("Orchestrate a negotiation between a Sourcing Manager and a Supplier Sales Director.")
+    st.markdown("An AI agent system to help Sourcing Managers identify and negotiate with automotive part suppliers.")
 
-    part_name_negotiate = st.text_input("Enter the part name for negotiation:", "EV Battery Pack (90kWh)")
-    target_price = st.number_input("Enter your target per-unit price (£):", value=5000)
+    st.subheader("Step 1: Define Sourcing Request")
+    part_name = st.text_input("Enter the Automotive Part Name:", value="G-Series Turbocharger")
+    target_price = st.number_input(
+        "Enter your Target Per-Unit Price (£):",
+        min_value=1.0,
+        value=1550.0,
+        step=10.0,
+        format="%.2f"
+    )
 
-    if llm and st.button("🔍 Research Suppliers & Start Negotiation"):
-        if not part_name_negotiate:
+    if 'supplier_research_done' not in st.session_state:
+        st.session_state.supplier_research_done = False
+    if 'supplier_options' not in st.session_state:
+        st.session_state.supplier_options = []
+    if 'supplier_profiles' not in st.session_state:
+        st.session_state.supplier_profiles = {}
+
+
+    if st.button("1. 🕵️ Find Top 3 Suppliers"):
+        if not part_name:
             st.warning("Please enter a part name.")
         else:
-            with st.spinner("Running Market Research Agent to find suppliers..."):
-                supplier_research_result = run_supplier_research_agent(llm, part_name_negotiate)
-                st.write("### Market Research Agent Output:")
-                st.markdown(supplier_research_result)
+            with st.spinner("Market Research Agent is identifying top suppliers..."):
+                try:
+                    research_results = run_supplier_research_agent(llm, part_name)
+                    st.session_state.supplier_research_done = True
+                    # A simple parser to extract names for the selectbox
+                    profiles = research_results.split("###") # Assuming this is the separator
+                    supplier_names = []
+                    supplier_profiles_map = {}
+                    for profile in profiles:
+                        if "Supplier" in profile:
+                            name = profile.split("\n")[0].replace("*","").strip()
+                            supplier_names.append(name)
+                            supplier_profiles_map[name] = profile.strip()
 
-            st.write("---")
-            st.info("Now, using the first supplier profile for negotiation simulation...")
-            # Simple parsing to get the first supplier's profile for the next agent
-            try:
-                first_supplier_profile = supplier_research_result.split('###')[1].strip()
-            except IndexError:
-                first_supplier_profile = "A leading supplier known for high quality."
+                    st.session_state.supplier_options = supplier_names
+                    st.session_state.supplier_profiles = supplier_profiles_map
+                    st.success("Research complete!")
+                    st.markdown(research_results)
 
-            with st.spinner("Running Negotiation Agent Simulation..."):
-                negotiation_result = run_negotiation_agent(llm, part_name_negotiate, first_supplier_profile, target_price)
-                st.write("### Negotiation Simulation Output:")
-                st.markdown(negotiation_result)
+                except Exception as e:
+                    st.error(f"An error occurred during market research: {e}")
 
-# --- NEW: Car Life-Style Configurator ---
+    if st.session_state.supplier_research_done:
+        st.subheader("Step 2: Select Supplier and Negotiate")
+        if not st.session_state.supplier_options:
+             st.warning("No suppliers found. Please try a different part name.")
+        else:
+            selected_supplier_name = st.selectbox(
+                "Choose a supplier to negotiate with:",
+                options=st.session_state.supplier_options
+            )
+
+            if st.button("2. 💬 Negotiate Price"):
+                if not selected_supplier_name:
+                    st.warning("Please select a supplier.")
+                else:
+                    supplier_profile = st.session_state.supplier_profiles.get(selected_supplier_name, "N/A")
+                    with st.spinner(f"Negotiation Agent is engaging with {selected_supplier_name}..."):
+                        try:
+                            negotiation_result = run_negotiation_agent(llm, part_name, supplier_profile, target_price)
+                            st.markdown("---")
+                            st.subheader("Negotiation Outcome")
+                            st.markdown(negotiation_result)
+                        except Exception as e:
+                            st.error(f"An error occurred during negotiation: {e}")
+
+# --- NEW: Car Life-Style Configurator Agent ---
 elif step == "18. Car Life-Style Configurator":
     st.subheader("🚗 Car Life-Style Configurator")
-    st.markdown("Get personalized car recommendations based on your daily needs and lifestyle.")
+    st.markdown("Describe your dream car and lifestyle, and our AI salesperson will find the perfect match for you!")
+
     user_needs = st.text_area(
-        "Describe your lifestyle and what you need in a car:",
+        "Tell us what you're looking for in a car. For example: 'I need a family car for long drives on mountains with a space for my dog'",
         height=150,
-        placeholder="e.g., I'm a parent of two young kids living in the countryside. I need something safe with a large boot for the dog and shopping, and it must be good on fuel for my daily commute to the city."
+        placeholder="e.g., I'm looking for a sporty two-seater for weekend drives in the countryside, but it should also be reliable for daily commuting."
     )
-    if st.button("💡 Get Recommendations"):
+
+    if llm and st.button("🤖 Find My Car"):
         if not user_needs:
             st.warning("Please describe your needs to get a recommendation.")
-        elif not llm:
-            st.error("LLM is not initialized. Cannot generate recommendations.")
         else:
-            with st.spinner("Finding the perfect car for you..."):
-                recommendations = run_car_configurator_agent(llm, user_needs)
-                st.markdown(recommendations)
+            with st.spinner("Our AI salesperson is searching for the perfect car for you..."):
+                try:
+                    car_recommendations = run_car_configurator_agent(llm, user_needs)
+                    st.markdown(car_recommendations)
+                except Exception as e:
+                    st.error(f"❌ An error occurred while generating recommendations: {e}")
 
 # --- NEW: Accounts Receivable - AI Agent ---
 elif step == "19. Accounts Receivable - AI Agent":
