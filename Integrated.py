@@ -299,7 +299,7 @@ def run_query_categorization_agent(llm, query):
     """Categorizes the supplier query."""
     prompt = PromptTemplate.from_template(
         """
-You are a Query Categorization Agent for an Accounts Receivable department.
+You are a Query Categorization Agent for an Accounts Payable department.
 Read the following supplier email and categorize it into ONE of the following categories:
 - Invoice Status Inquiry
 - Payment Discrepancy
@@ -341,7 +341,7 @@ def run_draft_response_agent(llm, category, summary, query, sap_data):
     """Drafts a response to the supplier using SAP data."""
     prompt = PromptTemplate.from_template(
         """
-You are an Accounts Receivable AI Agent.
+You are an Accounts Payable AI Agent.
 You have received a supplier query and your task is to draft a professional and helpful email response.
 Use the provided category, summary, and SAP data to find the relevant information and compose the email.
 Be polite, concise, and directly address the supplier's question.
@@ -1145,7 +1145,7 @@ elif step == "18. Car Life-Style Configurator":
 
 # --- NEW: Accounts Receivable - AI Agent ---
 elif step == "19. Accounts Payable Agent":
-    st.subheader("🧾 Accounts Receivable - AI Agent")
+    st.subheader("🧾 Accounts Payable - AI Agent")
     st.markdown(
         "An autonomous agent to respond to supplier queries by analyzing the query and checking internal financial data."
     )
@@ -1215,6 +1215,7 @@ elif step == "19. Accounts Payable Agent":
                 st.success("✅ Autonomous workflow complete. Final response is ready.")
                 st.subheader("Generated Email Response:")
                 st.markdown(final_response)
+
 
 
 
