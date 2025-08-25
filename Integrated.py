@@ -370,13 +370,13 @@ step = st.sidebar.radio(
     "**Available Agents:**",
     [
         "1. Ticket Summarization",
-        "2. Codebase Ingestion",
-        "3. Code Search",
-        "4. Modification Plan",
-        "5. Few-Shot Prompt (Optional)",
-        "6. Code Generation",
-        "7. Code Validation",
-        "8. Git Commit + Push",
+       # "2. Codebase Ingestion",
+       # "3. Code Search",
+       # "4. Modification Plan",
+       # "5. Few-Shot Prompt (Optional)",
+       # "6. Code Generation",
+       # "7. Code Validation",
+       # "8. Git Commit + Push",
         "9. App Log Analyser",
         "10. Legacy Code Convertor",
         "11. Equipment Predictive Maintenance",
@@ -1215,5 +1215,6 @@ elif step == "19. Accounts Receivable Agent":
                 st.success("✅ Autonomous workflow complete. Final response is ready.")
                 st.subheader("Generated Email Response:")
                 st.markdown(final_response)
+
 
 
