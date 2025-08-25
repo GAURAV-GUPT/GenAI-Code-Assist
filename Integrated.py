@@ -294,7 +294,7 @@ Your customer has described their needs in natural language. Your task is to ana
     return chain.run(user_needs=user_needs)
 
 
-# --- NEW: Accounts Receivable Agent Functions ---
+# --- NEW: Accounts Payable Agent Functions ---
 def run_query_categorization_agent(llm, query):
     """Categorizes the supplier query."""
     prompt = PromptTemplate.from_template(
@@ -387,7 +387,7 @@ step = st.sidebar.radio(
         "16. Automotive Campaigns Creation",
         "17. Supplier Negotiation System",
         "18. Car Life-Style Configurator",
-        "19. Accounts Receivable Agent", 
+        "19. Accounts Payable Agent", 
     ],
 )
 
@@ -1144,7 +1144,7 @@ elif step == "18. Car Life-Style Configurator":
                     )
 
 # --- NEW: Accounts Receivable - AI Agent ---
-elif step == "19. Accounts Receivable Agent":
+elif step == "19. Accounts Payable Agent":
     st.subheader("🧾 Accounts Receivable - AI Agent")
     st.markdown(
         "An autonomous agent to respond to supplier queries by analyzing the query and checking internal financial data."
@@ -1171,7 +1171,7 @@ elif step == "19. Accounts Receivable Agent":
         "status": ["Paid", "Paid", "Pending", "Overdue", "Pending"],
     }
     df_sap = pd.DataFrame(dummy_sap_data)
-    with st.expander("View Dummy SAP Accounts Payable Data"):
+    with st.expander("View SAP Accounts Payable Data via APIs"):
         st.dataframe(df_sap)
 
     # Get user query
@@ -1215,6 +1215,7 @@ elif step == "19. Accounts Receivable Agent":
                 st.success("✅ Autonomous workflow complete. Final response is ready.")
                 st.subheader("Generated Email Response:")
                 st.markdown(final_response)
+
 
 
 
