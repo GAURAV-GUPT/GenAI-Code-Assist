@@ -1282,12 +1282,13 @@ elif step == "19. Accounts Payable Agent":
                 st.success("✅ Autonomous workflow complete. Final response is ready.")
                 st.subheader("Generated Email Response:")
                 st.markdown(final_response)
-elif selected_agent == "20. Observability to Self Heal AI Agent": # <--- Add this new block
+elif step == "20. Observability to Self Heal AI Agent": # <--- Add this new block
     if not llm:
         st.error("LLM is not initialized. Cannot process the request.")
     else:
         with st.spinner("Autonomous agent is initiating self-healing workflow..."):
             run_observability_agent(llm)
+
 
 
 
