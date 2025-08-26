@@ -14,6 +14,7 @@ from openai import OpenAI
 import numpy as np
 import time
 import random
+import pandas
 
 # Load .env for OpenAI key
 load_dotenv()
@@ -369,15 +370,15 @@ Be polite, concise, and directly address the supplier's question.
 #=====================================================================
 # HELPER function for 20
 def run_observability_agent(llm):
-    st.info("Step 1: Agent 1 (Alert Generator) is generating a fake alert from an SAP server...")
+    st.info("Step 1: Agent 1 (Alert Generator) is generating a fake alert from a fake host...")
 
     # Agent 1: Generates a fake alert from a random server type
-    server_types = ["App Server", "Web Server", "Database Server"]
+    server_types = ["APP-EU-SAP01", "WEB-US-SAP02", "DB-APAC-SAP03"]
     server = random.choice(server_types)
     alert_type = random.choice(["Memory Usage Exceeds 90%", "High CPU Load", "Network Latency Spike"])
-    alert_message = f"Alert: {alert_type} detected on {server}."
     
-    st.write(f"**Generated Alert:** {alert_message}")
+    st.write(f"**Alert Received from:** `{server}`")
+    st.write(f"**Alert Type:** `{alert_type}`")
     st.write("---")
     time.sleep(2)
 
@@ -385,7 +386,20 @@ def run_observability_agent(llm):
 
     # Agent 2: Traps the alert and creates a new ticket in the ITSM system
     ticket_number = f"INC{random.randint(10000, 99999)}"
-    st.write(f"**ITSM Ticket Created:** Ticket number **{ticket_number}**")
+    
+    # Create a DataFrame for the initial ticket details
+    ticket_data = {
+        'Ticket Number': [ticket_number],
+        'Description': [f"High {alert_type} on SAP system host {server}."],
+        'Priority': ["P1 - Critical"],
+        'Assigned To': ["Observability-Agent"],
+        'CI-Name': [server],
+        'Created Date': [pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S")]
+    }
+    ticket_df = pd.DataFrame(ticket_data)
+
+    st.write("### New ITSM Ticket Created")
+    st.table(ticket_df)
     st.write("---")
     time.sleep(2)
 
@@ -395,10 +409,10 @@ def run_observability_agent(llm):
     root_cause = "Outdated cache on the application server."
     sop = (
         "**Standard Operating Procedure (SOP) Applied:**\n"
-        "1.  **Analyze Log Files:** Review recent application and system logs to identify anomalies.\n"
-        "2.  **Identify Root Cause:** Pinpoint the specific log entry indicating cache overflow.\n"
+        "1.  **Analyze Log Files:** Review recent application and system logs.\n"
+        "2.  **Identify Root Cause:** Pinpoint the specific log entry for cache overflow.\n"
         "3.  **Remedial Action:** Flush the application server cache using the `sap-cache-clear` command.\n"
-        "4.  **Monitor Performance:** Verify that CPU and memory usage have returned to normal levels."
+        "4.  **Monitor Performance:** Verify that CPU and memory usage have returned to normal."
     )
     st.write(f"**Root Cause:** {root_cause}")
     st.write(sop)
@@ -409,23 +423,29 @@ def run_observability_agent(llm):
     
     # Agent 4: Communicates with the end-user and updates the incident
     closure_statement = (
-        f"**Incident {ticket_number} Closure Statement:**\n"
-        f"The issue of high {alert_type} has been resolved. The root cause was identified as {root_cause}. "
-        "A remedial action was taken by applying the standard operating procedure to clear the application cache. "
-        "The system is now operating at normal performance levels. The incident is now closed."
+        f"**Incident {ticket_number} Closure Statement:** The issue of high {alert_type} has been resolved. "
+        "The root cause was identified and the standard operating procedure was applied. The system is now operating at normal performance."
     )
     st.write(closure_statement)
     st.write("---")
     time.sleep(2)
 
-    st.info("Step 5: Agent 5 (Knowledge Management Agent) is updating the KEDB...")
+    st.info("Step 5: Agent 5 (Knowledge Management Agent) is updating the KEDB and closing the ticket...")
 
-    # Agent 5: Updates the KEDB
+    # Agent 5: Updates the KEDB and closes the ticket
     kedb_update = (
         f"**KEDB Updated:** A new record has been added to the Known Error Database for root cause "
         f"'{root_cause}' with the corresponding SOP. This will ensure future occurrences are resolved automatically."
     )
     st.write(kedb_update)
+    
+    # Update the DataFrame with closure details
+    ticket_df['Closure Date'] = pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S")
+    ticket_df['Resolution Comments'] = ["Automated self-healing completed successfully."]
+    ticket_df['Resolution Category'] = ["Script/Automation Fix"]
+
+    st.write("### ITSM Ticket Closed")
+    st.table(ticket_df)
     st.success("✅ Self-healing workflow complete.")
 #===================================================================================================
 
@@ -1288,6 +1308,7 @@ elif step == "20. Observability to Self Heal AI Agent": # <--- Add this new bloc
     else:
         with st.spinner("Autonomous agent is initiating self-healing workflow..."):
             run_observability_agent(llm)
+
 
 
 
