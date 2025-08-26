@@ -380,7 +380,7 @@ def run_observability_agent(llm):
     st.write(f"**Alert Received from:** `{server}`")
     st.write(f"**Alert Type:** `{alert_type}`")
     st.write("---")
-    time.sleep(2)
+    time.sleep(10)
 
     st.info("Step 2: Agent 2 (Observability Agent) is trapping the alert and creating an ITSM ticket...")
 
@@ -401,7 +401,7 @@ def run_observability_agent(llm):
     st.write("### New ITSM Ticket Created")
     st.table(ticket_df)
     st.write("---")
-    time.sleep(2)
+    time.sleep(10)
 
     st.info("Step 3: Agent 3 (Problem-Solving Agent) is picking up the incident, finding the root cause, and applying an SOP...")
 
@@ -417,7 +417,7 @@ def run_observability_agent(llm):
     st.write(f"**Root Cause:** {root_cause}")
     st.write(sop)
     st.write("---")
-    time.sleep(2)
+    time.sleep(10)
 
     st.info("Step 4: Agent 4 (Communication Agent) is communicating with the end-user and updating the incident...")
     
@@ -428,7 +428,7 @@ def run_observability_agent(llm):
     )
     st.write(closure_statement)
     st.write("---")
-    time.sleep(2)
+    time.sleep(10)
 
     st.info("Step 5: Agent 5 (Knowledge Management Agent) is updating the KEDB and closing the ticket...")
 
@@ -1312,6 +1312,7 @@ elif step == "20. Observability to Self Heal AI Agent": # <--- Add this new bloc
                     )
         with st.spinner("Autonomous agent is initiating self-healing workflow..."):
             run_observability_agent(llm)
+
 
 
 
