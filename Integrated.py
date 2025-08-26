@@ -370,7 +370,7 @@ Be polite, concise, and directly address the supplier's question.
 #=====================================================================
 # HELPER function for 20
 def run_observability_agent(llm):
-    st.info("Step 1: Agent 1 (Alert Generator) is generating a fake alert from a fake host...")
+    st.info("Step 1: Agent 1 (Alert Capture) is capturing an alert from a host...")
 
     # Agent 1: Generates a fake alert from a random server type
     server_types = ["APP-EU-SAP01", "WEB-US-SAP02", "DB-APAC-SAP03"]
@@ -1312,6 +1312,7 @@ elif step == "20. Observability to Self Heal AI Agent": # <--- Add this new bloc
                     )
         with st.spinner("Autonomous agent is initiating self-healing workflow..."):
             run_observability_agent(llm)
+
 
 
 
