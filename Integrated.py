@@ -1306,8 +1306,13 @@ elif step == "20. Observability to Self Heal AI Agent": # <--- Add this new bloc
     if not llm:
         st.error("LLM is not initialized. Cannot process the request.")
     else:
+        st.subheader("🧾 Observability to Self Healing - AI Agent")
+        st.markdown(
+            "An autonomous agent that detects and resolves IT incidents in a production environment by creating tickets, applying standard operating procedures, and updating a knowledge database."
+                    )
         with st.spinner("Autonomous agent is initiating self-healing workflow..."):
             run_observability_agent(llm)
+
 
 
 
