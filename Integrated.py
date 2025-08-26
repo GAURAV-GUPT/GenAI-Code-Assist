@@ -12,6 +12,8 @@ from langchain.vectorstores import FAISS
 from langchain.docstore.document import Document
 from openai import OpenAI
 import numpy as np
+import time
+import random
 
 # Load .env for OpenAI key
 load_dotenv()
@@ -364,6 +366,70 @@ Be polite, concise, and directly address the supplier's question.
     chain = LLMChain(llm=llm, prompt=prompt)
     return chain.run(category=category, summary=summary, query=query, sap_data=sap_data)
 
+#=====================================================================
+# HELPER function for 20
+def run_observability_agent(llm):
+    st.info("Step 1: Agent 1 (Alert Generator) is generating a fake alert from an SAP server...")
+
+    # Agent 1: Generates a fake alert from a random server type
+    server_types = ["App Server", "Web Server", "Database Server"]
+    server = random.choice(server_types)
+    alert_type = random.choice(["Memory Usage Exceeds 90%", "High CPU Load", "Network Latency Spike"])
+    alert_message = f"Alert: {alert_type} detected on {server}."
+    
+    st.write(f"**Generated Alert:** {alert_message}")
+    st.write("---")
+    time.sleep(2)
+
+    st.info("Step 2: Agent 2 (Observability Agent) is trapping the alert and creating an ITSM ticket...")
+
+    # Agent 2: Traps the alert and creates a new ticket in the ITSM system
+    ticket_number = f"INC{random.randint(10000, 99999)}"
+    st.write(f"**ITSM Ticket Created:** Ticket number **{ticket_number}**")
+    st.write("---")
+    time.sleep(2)
+
+    st.info("Step 3: Agent 3 (Problem-Solving Agent) is picking up the incident, finding the root cause, and applying an SOP...")
+
+    # Agent 3: Finds the root cause and applies the SOP
+    root_cause = "Outdated cache on the application server."
+    sop = (
+        "**Standard Operating Procedure (SOP) Applied:**\n"
+        "1.  **Analyze Log Files:** Review recent application and system logs to identify anomalies.\n"
+        "2.  **Identify Root Cause:** Pinpoint the specific log entry indicating cache overflow.\n"
+        "3.  **Remedial Action:** Flush the application server cache using the `sap-cache-clear` command.\n"
+        "4.  **Monitor Performance:** Verify that CPU and memory usage have returned to normal levels."
+    )
+    st.write(f"**Root Cause:** {root_cause}")
+    st.write(sop)
+    st.write("---")
+    time.sleep(2)
+
+    st.info("Step 4: Agent 4 (Communication Agent) is communicating with the end-user and updating the incident...")
+    
+    # Agent 4: Communicates with the end-user and updates the incident
+    closure_statement = (
+        f"**Incident {ticket_number} Closure Statement:**\n"
+        f"The issue of high {alert_type} has been resolved. The root cause was identified as {root_cause}. "
+        "A remedial action was taken by applying the standard operating procedure to clear the application cache. "
+        "The system is now operating at normal performance levels. The incident is now closed."
+    )
+    st.write(closure_statement)
+    st.write("---")
+    time.sleep(2)
+
+    st.info("Step 5: Agent 5 (Knowledge Management Agent) is updating the KEDB...")
+
+    # Agent 5: Updates the KEDB
+    kedb_update = (
+        f"**KEDB Updated:** A new record has been added to the Known Error Database for root cause "
+        f"'{root_cause}' with the corresponding SOP. This will ensure future occurrences are resolved automatically."
+    )
+    st.write(kedb_update)
+    st.success("✅ Self-healing workflow complete.")
+#===================================================================================================
+
+
 
 # --- Streamlit UI and Logic ---
 step = st.sidebar.radio(
@@ -387,7 +453,8 @@ step = st.sidebar.radio(
         "16. Automotive Campaigns Creation",
         "17. Supplier Negotiation System",
         "18. Car Life-Style Configurator",
-        "19. Accounts Payable Agent", 
+        "19. Accounts Payable Agent",
+        "20. Observability to Self Heal AI Agent"  # <--- Add this line
     ],
 )
 
@@ -1215,6 +1282,12 @@ elif step == "19. Accounts Payable Agent":
                 st.success("✅ Autonomous workflow complete. Final response is ready.")
                 st.subheader("Generated Email Response:")
                 st.markdown(final_response)
+elif selected_agent == "20. Observability to Self Heal AI Agent": # <--- Add this new block
+    if not llm:
+        st.error("LLM is not initialized. Cannot process the request.")
+    else:
+        with st.spinner("Autonomous agent is initiating self-healing workflow..."):
+            run_observability_agent(llm)
 
 
 
