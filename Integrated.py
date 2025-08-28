@@ -540,30 +540,6 @@ Your task is to analyze the provided sensor data and equipment details to:
 step = st.sidebar.radio(
     "**Available Agents:**",
     [
-        # ... (other agents) ...
-        "11. Equipment Predictive Maintenance",
-        "12. Car Remote Diagnostics",
-        "13. Auto OEM Market Research",
-        "14. SDLC Multi-Agent",
-        "15. Trade Negotiator Agent",
-        "16. Automotive Campaigns Creation",
-        "17. Supplier Negotiation System",
-        "18. Car Life-Style Configurator",
-        "19. Accounts Payable Agent",
-        "20. Observability to Self Heal AI Agent",
-        "21. Litmus EDGE Agent"  # <--- Add this line
-    ],
-)
-
-
-
-
-
-
-# --- Streamlit UI and Logic ---
-step = st.sidebar.radio(
-    "**Available Agents:**",
-    [
         "1. Ticket Summarization",
        # "2. Codebase Ingestion",
        # "3. Code Search",
@@ -1429,6 +1405,7 @@ elif step == "21. Litmus EDGE Agent":
     st.markdown("This agent simulates a diagnostic workflow, from data ingestion to providing a solution.")
     if st.button("🚀 Start Diagnostic Workflow"):
         run_litmus_edge_agent(llm)
+
 
 
 
