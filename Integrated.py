@@ -449,6 +449,115 @@ def run_observability_agent(llm):
     st.success("✅ Self-healing workflow complete.")
 #===================================================================================================
 
+#===================================================================================================
+# Create a new function for the Litmus EDGE Agent
+def run_litmus_edge_agent(llm):
+    """
+    A multi-agent system to diagnose and solve a problem on a CNC machine.
+    - Agent 1: Gets data from a CNC machine via an API.
+    - Agent 2: Identifies the equipment details.
+    - Agent 3: Provides potential impact and a solution (SOP).
+    """
+    st.info("Step 1: Agent 1 (Data Ingestion) is getting data from the CNC machine via Litmus Edge API...")
+
+    # Agent 1: Generate and show mock data from a CNC machine
+    equipment_name = "Mazak VCN-530C"
+    vibration_data = np.arange(12.5, 17.5, 0.5)  # Normal vibration range
+    vibration_data[-3:] = [21.1, 25.4, 28.9]  # Spikes indicating a problem
+
+    data = {
+        'timestamp': pd.to_datetime('now') - pd.to_timedelta(np.arange(10), 'minutes'),
+        'equipment_name': [equipment_name] * 10,
+        'temperature_c': np.round(np.random.uniform(45.0, 55.0, 10), 1),
+        'spindle_speed_rpm': np.random.randint(1500, 2000, 10),
+        'vibration_level_mm/s': vibration_data,
+        'status': ['Running'] * 10
+    }
+    df = pd.DataFrame(data)
+    
+    st.write(f"### ⚙️ Live Data from: {equipment_name} via Litmus Edge Data Platform")
+    st.dataframe(df)
+    st.markdown("---")
+    
+    time.sleep(10)
+    
+    st.info("Step 2: Agent 2 (Equipment Identification) is identifying the machine's details...")
+    
+    # Agent 2: Automatically identify equipment details based on the name
+    equipment_details = {
+        'Equipment Name': equipment_name,
+        'Make': 'Mazak',
+        'Model': 'VCN-530C',
+        'Manufacturer': 'Yamazaki Mazak Corporation',
+        'Year of Make': 2021,
+        'Supplier': 'XYZ Machinery Co.',
+        'Supplier Details': 'Contact: John Doe, john.doe@xyzmachinery.com, +44 1234 567890'
+    }
+    
+    st.write("### 🤖 Identified Equipment Details")
+    st.write(pd.Series(equipment_details).to_frame('Details'))
+    st.markdown("---")
+    
+    time.sleep(10)
+
+    st.info("Step 3: Agent 3 (Diagnostic & Resolution) is analyzing the data to recommend a fix...")
+
+    # Agent 3: Analyze data and provide a diagnosis and SOP
+    data_summary = df.to_string()
+    
+    prompt = PromptTemplate.from_template(
+        """
+You are an expert maintenance and diagnostic AI agent for an automotive shop floor.
+Your task is to analyze the provided sensor data and equipment details to:
+1.  **Identify the problem:** What is happening with the equipment?
+2.  **State the potential impact:** What will happen if this isn't fixed?
+3.  **Provide a Standard Operating Procedure (SOP):** What are the step-by-step actions to fix the issue?
+
+**Equipment Details:**
+{equipment_details}
+
+**Sensor Data/Logs:**
+{data_summary}
+
+---
+**Diagnosis and Resolution Plan:**
+"""
+    )
+    
+    chain = LLMChain(llm=llm, prompt=prompt)
+    diagnosis_report = chain.run(
+        equipment_details=str(equipment_details),
+        data_summary=data_summary
+    )
+    
+    st.write(f"### 🩺 Diagnosis and Resolution for {equipment_name}")
+    st.markdown(diagnosis_report)
+    st.success("✅ Problem diagnosed and solution provided.")
+
+#===================================================================================================
+
+# --- Streamlit UI and Logic ---
+step = st.sidebar.radio(
+    "**Available Agents:**",
+    [
+        # ... (other agents) ...
+        "11. Equipment Predictive Maintenance",
+        "12. Car Remote Diagnostics",
+        "13. Auto OEM Market Research",
+        "14. SDLC Multi-Agent",
+        "15. Trade Negotiator Agent",
+        "16. Automotive Campaigns Creation",
+        "17. Supplier Negotiation System",
+        "18. Car Life-Style Configurator",
+        "19. Accounts Payable Agent",
+        "20. Observability to Self Heal AI Agent",
+        "21. Litmus EDGE Agent"  # <--- Add this line
+    ],
+)
+
+
+
+
 
 
 # --- Streamlit UI and Logic ---
@@ -474,7 +583,8 @@ step = st.sidebar.radio(
         "17. Supplier Negotiation System",
         "18. Car Life-Style Configurator",
         "19. Accounts Payable Agent",
-        "20. Observability to Self Heal AI Agent"  # <--- Add this line
+        "20. Observability to Self Heal AI Agent",
+        "21. Litmus EDGE Agent"
     ],
 )
 
@@ -1312,6 +1422,13 @@ elif step == "20. Observability to Self Heal AI Agent": # <--- Add this new bloc
                     )
         with st.spinner("Autonomous agent is initiating self-healing workflow..."):
             run_observability_agent(llm)
+
+# Add the new Litmus EDGE Agent block
+elif step == "21. Litmus EDGE Agent":
+    st.subheader("🛠️ Litmus EDGE Agent: CNC Machine Diagnostics")
+    st.markdown("This agent simulates a diagnostic workflow, from data ingestion to providing a solution.")
+    if st.button("🚀 Start Diagnostic Workflow"):
+        run_litmus_edge_agent(llm)
 
 
 
