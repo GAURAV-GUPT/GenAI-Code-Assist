@@ -675,46 +675,46 @@ def run_cnc_ai_agent(llm):
         st.markdown(st.session_state.cnc_benefits)
         st.success("✅ CNC Analysis Workflow Complete.")
 
-# New section for PDF export
-        st.markdown("---")
-        st.markdown("### Export Report")
+    # # New section for PDF export
+    #    st.markdown("---")
+    #    st.markdown("### Export Report")
         
-        # Generate the PDF file in memory
-        pdf_buffer = BytesIO()
-        doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
-        styles = getSampleStyleSheet()
+    #    # Generate the PDF file in memory
+    #    pdf_buffer = BytesIO()
+    #    doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
+    #    styles = getSampleStyleSheet()
         
-        # Add custom styles if needed
-        styles.add(ParagraphStyle(name='Justify', alignment=TA_CENTER))
+    #    # Add custom styles if needed
+    #    styles.add(ParagraphStyle(name='Justify', alignment=TA_CENTER))
         
-        story = []
-        story.append(Paragraph("CNC AI Agent - Final Report", styles['Title']))
-        story.append(Spacer(1, 12))
+    #    story = []
+    #    story.append(Paragraph("CNC AI Agent - Final Report", styles['Title']))
+    #    story.append(Spacer(1, 12))
         
-        # Add analysis content
-        story.append(Paragraph("Agent 2: CNC Expert Analysis", styles['Heading2']))
-        story.append(Spacer(1, 12))
-        # Replace markdown bold with HTML for reportlab
-        analysis_html = st.session_state.cnc_analysis.replace("**", "<b>")
-        story.append(Paragraph(analysis_html, styles['Normal']))
-        story.append(Spacer(1, 12))
+    #    # Add analysis content
+    #    story.append(Paragraph("Agent 2: CNC Expert Analysis", styles['Heading2']))
+    #    story.append(Spacer(1, 12))
+    #    # Replace markdown bold with HTML for reportlab
+    #    analysis_html = st.session_state.cnc_analysis.replace("**", "<b>")
+    #    story.append(Paragraph(analysis_html, styles['Normal']))
+    #    story.append(Spacer(1, 12))
         
-        # Add benefits content
-        story.append(Paragraph("Agent 3: Business Impact Report", styles['Heading2']))
-        story.append(Spacer(1, 12))
-        benefits_html = st.session_state.cnc_benefits.replace("**", "<b>")
-        story.append(Paragraph(benefits_html, styles['Normal']))
+    #    # Add benefits content
+    #    story.append(Paragraph("Agent 3: Business Impact Report", styles['Heading2']))
+    #    story.append(Spacer(1, 12))
+    #    benefits_html = st.session_state.cnc_benefits.replace("**", "<b>")
+    #    story.append(Paragraph(benefits_html, styles['Normal']))
         
-        doc.build(story)
-        pdf_buffer.seek(0)
+    #    doc.build(story)
+    #    pdf_buffer.seek(0)
         
-        # Create a download button for the generated PDF
-        st.download_button(
-            label="⬇️ Download Report as PDF",
-            data=pdf_buffer,
-            file_name="cnc_analysis_report.pdf",
-            mime="application/pdf"
-        )
+    #    # Create a download button for the generated PDF
+    #    st.download_button(
+    #        label="⬇️ Download Report as PDF",
+    #        data=pdf_buffer,
+    #        file_name="cnc_analysis_report.pdf",
+    #        mime="application/pdf"
+    #    )
 
 #===============================================================================
 
@@ -1599,6 +1599,7 @@ elif step == "22. CNC AI Agent":
         run_cnc_ai_agent(llm)
     else:
         st.error("❌ OpenAI is not initialized. Please check your API key.")
+
 
 
 
