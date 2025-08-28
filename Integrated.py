@@ -705,10 +705,10 @@ def run_cnc_ai_agent(llm):
         benefits_html = st.session_state.cnc_benefits.replace("**", "<b>")
         story.append(Paragraph(benefits_html, styles['Normal']))
         
-       doc.build(story)
+        doc.build(story)
         pdf_buffer.seek(0)
         
-#        # Create a download button for the generated PDF
+        # Create a download button for the generated PDF
         st.download_button(
             label="⬇️ Download Report as PDF",
             data=pdf_buffer,
@@ -1599,6 +1599,7 @@ elif step == "22. CNC AI Agent":
         run_cnc_ai_agent(llm)
     else:
         st.error("❌ OpenAI is not initialized. Please check your API key.")
+
 
 
 
