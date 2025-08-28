@@ -645,7 +645,11 @@ def run_cnc_ai_agent(llm):
         if st.button("🔍 Analyze CNC Data"):
             # Agent 2: Expert Analysis
             with st.spinner("Agent 2 (CNC Expert) is analyzing the data..."):
-                data_string = st.session_state.cnc_df.to_string()
+                
+                # data_string = st.session_state.cnc_df.to_string() # Old line
+                # New line - sends a statistical summary
+                # data_string = st.session_state.cnc_df.describe().to_string() 
+                data_string = st.session_state.cnc_df.sample(n=100, random_state=1).to_string()
                 analysis = run_cnc_expert_agent(llm, data_string)
                 st.session_state.cnc_analysis = analysis
             
@@ -1547,6 +1551,7 @@ elif step == "22. CNC AI Agent":
         run_cnc_ai_agent(llm)
     else:
         st.error("❌ OpenAI is not initialized. Please check your API key.")
+
 
 
 
