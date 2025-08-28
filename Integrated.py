@@ -552,7 +552,7 @@ Your analysis must be thorough and actionable for a shop floor manager to preven
 ---
 
 **Instructions:**
-1.  **Identify Anomalies:** Carefully examine the data for any unusual patterns, spikes, drops, or correlations between different metrics (e.g., temperature vs. vibration, spindle speed vs. tool wear). List each anomaly you find.
+1.  **Identify Anomalies:** Carefully examine the data for any unusual patterns, spikes, drops, or correlations between different metrics for devicename, locations, tagname, the position or velocity error on the axes, the reference velocity or another reference value for the axes and others like e.g temperature vs. vibration, spindle speed vs. tool wear). List each anomaly you find.
 2.  **Determine Root Cause:** For each anomaly, provide a detailed explanation of the most likely root cause. Be specific. For example, instead of "machine is vibrating," say "A sudden spike in Y-axis vibration concurrent with a rise in spindle temperature suggests a worn spindle bearing or an unbalanced tool."
 3.  **Provide Detailed Fixes:** For each identified issue, provide a clear, step-by-step Standard Operating Procedure (SOP) that a maintenance technician can follow to fix the problem. Include required tools and estimated time for the fix.
 4.  **Structure Your Report:** Format your response using markdown with the following sections:
@@ -599,6 +599,7 @@ Provide a concise summary using markdown.
 - **Productivity Impact:**
 - **Labor Cost Savings:**
 - **Overall Summary:** (A brief concluding sentence on the value of this proactive analysis).
+- **% of accuracy of the findings**
 """
     )
     chain = LLMChain(llm=llm, prompt=prompt)
@@ -1551,6 +1552,7 @@ elif step == "22. CNC AI Agent":
         run_cnc_ai_agent(llm)
     else:
         st.error("❌ OpenAI is not initialized. Please check your API key.")
+
 
 
 
