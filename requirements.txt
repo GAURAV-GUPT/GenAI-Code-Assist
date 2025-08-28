@@ -22,3 +22,4 @@ streamlit
 chromadb
 pandas
 langchain_community
+openpyxl
