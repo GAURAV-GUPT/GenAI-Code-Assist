@@ -2,6 +2,46 @@
 
 This project is a multi-agent AI assistant designed to streamline various aspects of the software development lifecycle (SDLC) and other business operations. Built with **Streamlit** and **LangChain**, it integrates different AI-powered agents into a single, user-friendly interface.
 
+🌟 Key Features
+The application is structured around a collection of independent agents, each with a specific purpose. You can interact with them via the sidebar.
+
+💻 Software Development Lifecycle (SDLC)
+Ticket Summarization: Summarizes user stories and tickets, extracting key intent and tasks.
+
+SDLC Multi-Agent: A chained workflow that takes a Business Requirements Document (BRD) and automatically generates:
+User Stories
+Acceptance Criteria
+Test Cases
+
+Functional Code
+
+⚙️ **Industrial Automation & Diagnostics**
+
+**CNC AI Agent:** This advanced workflow analyzes uploaded CNC machine data from a mock Excel file. It orchestrates three agents to provide:
+An expert technical analysis of anomalies and root causes.
+A step-by-step Standard Operating Procedure (SOP) for maintenance.
+A business impact report quantifying the avoided downtime and cost savings.
+
+**Observability to Self-Heal AI Agent:** Simulates an end-to-end "self-healing" IT process. It captures a mock system alert, creates an ITSM ticket, diagnoses the root cause, applies a fix, and closes the ticket—all autonomously.
+
+**Litmus EDGE Agent:** Simulates an industrial diagnosis workflow for a CNC machine. It ingests live data, identifies equipment details, and provides a diagnostic report with a recommended solution.
+
+**Car Remote Diagnostics:** A mock diagnostic agent that simulates troubleshooting and provides solutions for a car's Check Engine light.
+
+**Equipment Predictive Maintenance:** A simple agent that provides a report on the health of a mock vehicle fleet.
+
+📦 **Business & Supply Chain**
+Supplier Negotiation System: Simulates a negotiation between a sourcing manager and a supplier for an automotive part.
+Trade Negotiator Agent: A simple agent that provides a report on trade negotiation outcomes.
+Accounts Payable Agent: Categorizes and summarizes a mock supplier query and drafts a professional response using provided "SAP" data.
+Auto OEM Market Research: Generates a strategic brief, creative concept, and ad copy for a mock automotive campaign.
+
+🛠️ **Technology Stack**
+Framework: Streamlit for the front-end UI.
+AI Orchestration: LangChain for chaining LLM calls and managing multi-agent workflows.
+LLM: The system is powered by gpt-4o-mini via the OpenAI API.
+Data Handling: Pandas for data manipulation
+
 ## 🚀 Features
 
 The application provides a comprehensive suite of tools, including:
